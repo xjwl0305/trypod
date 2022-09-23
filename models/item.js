@@ -1,57 +1,68 @@
 const Sequelize = require('sequelize');
 module.exports = (sequelize) => {
     return sequelize.define(
-        'user',
+        'item',
         {
-            deleted_at: {
-                type: Sequelize.DATE,
-                allowNull: true,
-            },
-            account: {
+            name: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
+                unique: true,
             },
-            phone: {
+            category: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
+                unique: true,
             },
-            hashed_password: {
+            code: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
+                unique: true,
             },
-            salt: {
-                type: Sequelize.STRING(255),
-                allowNull: true,
-            },
-            email: {
-                type: Sequelize.STRING(255),
+            unit_weight: {
+                type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            company_name: {
-                type: Sequelize.STRING(255),
+            alarm_weight: {
+                type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            company_address: {
-                type: Sequelize.STRING(255),
+            max_weight: {
+                type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            company_detailed_address: {
+            image_url: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
+                unique: true,
+            },
+            description: {
+                type: Sequelize.STRING(255),
+                allowNull: false,
+                unique: true,
             },
             division: {
                 type: Sequelize.STRING(255),
                 allowNull: true,
             },
-            summary_option_id: {
+            vaild_date: {
+                type: Sequelize.DATE,
+                allowNull: false,
+            },
+            price: {
                 type: Sequelize.INTEGER,
+                allowNull: false,
+            },
+            recommand_order_weight: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
+            volume: {
+                type: Sequelize.STRING(255),
                 allowNull: true,
-                unique: true,
             },
         },
         {
             timestamps: true,
-            //tableName: 'user',
             charset: "utf8"
         });
 };

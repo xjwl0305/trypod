@@ -34,9 +34,17 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.user = require('./user')(sequelize, Sequelize);
-db.company_branch = require('./company')(sequelize, Sequelize);
+db.warehouse_raw_data = require('./warehouse_raw_data')(sequelize, Sequelize);
+db.summary_option = require('./summary_option')(sequelize, Sequelize);
+//db.item_raw_data = require('./item_raw_data')(sequelize, Sequelize);
+db.location = require('./location')(sequelize, Sequelize);
+db.notification = require('./notification')(sequelize, Sequelize);
+db.item = require('./item')(sequelize, Sequelize);
+db.earlivery_device = require('./earlivery_device')(sequelize, Sequelize);
+db.container = require('./container')(sequelize, Sequelize);
+db.company_branch = require('./location')(sequelize, Sequelize);
 
 // user와 company_branch 1:N
-db.user.hasMany(db.company_branch, {foreignKey:'id', sourceKey:'id'});
-db.company_branch.belongsTo(db.user,{foreignKey:'user_id',targetKey:'id'});
+db.user.hasMany(db.location, {foreignKey:'user_id', sourceKey:'id'});
+db.location.belongsTo(db.user,{foreignKey:'user_id',targetKey:'id'});
 module.exports = db;

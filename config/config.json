@@ -1,10 +1,11 @@
 {
   "development": {
-    "username": "root",
-    "password": "Noris0601!",
-    "database": "trypod",
-    "host": "13.125.242.90",
-    "dialect": "mysql"
+    "username": "admin",
+    "password": "earlivery0102!",
+    "database": "earlivery",
+    "host": "earlivery.cckpfejc2svw.ap-northeast-2.rds.amazonaws.com",
+    "dialect": "mysql",
+    "timezone": "+09:00"
   },
   "test": {
     "username": "root",

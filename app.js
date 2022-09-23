@@ -4,14 +4,19 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var sequelize = require('./models').sequelize;
-var usersRouter = require('./routes/users');
-
+const indexRouter = require('./routes/index');
+const sequelize = require('./models').sequelize; // sequelize require
+const config = require('./config')
 
 
 var app = express();
-sequelize.sync();
+sequelize.sync({ force: false }) // 서버 실행시마다 테이블을 재생성할건지에 대한 여부
+    .then(() => {
+      console.log('데이터베이스 연결 성공');
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -22,8 +27,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.set('jwt-secret', config.secret)
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

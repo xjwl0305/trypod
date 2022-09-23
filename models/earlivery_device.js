@@ -1,57 +1,59 @@
 const Sequelize = require('sequelize');
 module.exports = (sequelize) => {
     return sequelize.define(
-        'user',
+        'earlivery_device',
         {
-            deleted_at: {
-                type: Sequelize.DATE,
-                allowNull: true,
-            },
-            account: {
+            nick_name: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
+                unique: true,
             },
-            phone: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-            },
-            hashed_password: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-            },
-            salt: {
-                type: Sequelize.STRING(255),
-                allowNull: true,
-            },
-            email: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-            },
-            company_name: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-            },
-            company_address: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-            },
-            company_detailed_address: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-            },
-            division: {
-                type: Sequelize.STRING(255),
-                allowNull: true,
-            },
-            summary_option_id: {
+            device_number: {
                 type: Sequelize.INTEGER,
+                allowNull: false,
+                unique: true,
+            },
+            address: {
+                type: Sequelize.STRING(255),
+                allowNull: false,
+                unique: true,
+            },
+            detailed_address: {
+                type: Sequelize.STRING(255),
+                allowNull: false,
+                unique: true,
+            },
+            description: {
+                type: Sequelize.STRING(255),
                 allowNull: true,
+            },
+            order_weight: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                unique: true,
+            },
+            order_state: {
+                type: Sequelize.STRING(255),
+                allowNull: false,
+                unique: true,
+            },
+            active: {
+                type: Sequelize.STRING(255),
+                allowNull: false,
+            },
+            item_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                unique: true,
+            },
+            location_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
                 unique: true,
             },
         },
         {
             timestamps: true,
-            //tableName: 'user',
             charset: "utf8"
         });
 };
