@@ -45,13 +45,12 @@ module.exports = (sequelize) => {
             },
             summary_option_id: {
                 type: Sequelize.INTEGER,
-                allowNull: true,
-                unique: true,
+                allowNull: true
             },
         },
         {
             timestamps: true,
-            //tableName: 'user',
+            tableName: 'user',
             charset: "utf8"
         });
 };

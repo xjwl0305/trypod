@@ -3,11 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 
 const indexRouter = require('./routes/index');
 const sequelize = require('./models').sequelize; // sequelize require
-const config = require('./config')
-
+const config = require('./config');
 
 var app = express();
 sequelize.sync({ force: false }) // 서버 실행시마다 테이블을 재생성할건지에 대한 여부
@@ -25,10 +25,15 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// app.use(cors({
+//     origin: 'http://localhost:3000',
+//     methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
+//     credentials: true,
+// }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.set('jwt-secret', config.secret)
+app.set('jwt-secret', config.secret);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
@@ -37,14 +42,14 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+//
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
 
 module.exports = app;

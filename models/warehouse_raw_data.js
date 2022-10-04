@@ -6,21 +6,21 @@ module.exports = (sequelize) => {
             temperature: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                unique: true,
+                unique: true
             },
             humidity: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                unique: true,
+                unique: true
             },
             location_id: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
-                unique: true,
+                allowNull: false
             },
         },
         {
             timestamps: true,
+            tableName: 'warehouse_raw_data',
             charset: "utf8"
         });
 };

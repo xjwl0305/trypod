@@ -6,16 +6,19 @@ module.exports = (sequelize) => {
             content: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
-                unique: true,
             },
             division: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
-                unique: true,
             },
+            user_id: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+            }
         },
         {
             timestamps: true,
+            tableName: 'notification',
             charset: "utf8"
         });
 };

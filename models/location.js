@@ -3,11 +3,6 @@ module.exports = (sequelize) => {
     return sequelize.define(
         'location',
         {
-            company_id: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-                unique: true,
-            },
             branch_name: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
@@ -19,17 +14,14 @@ module.exports = (sequelize) => {
             branch_detailed_address: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
-                unique: true,
             },
             layer_name: {
                 type: Sequelize.STRING(255),
-                allowNull: false,
-                unique: true,
+                allowNull: true,
             },
             warehouse_name: {
                 type: Sequelize.STRING(255),
-                allowNull: false,
-                unique: true,
+                allowNull: true,
             },
             manager_name: {
                 type: Sequelize.STRING(255),
@@ -38,37 +30,36 @@ module.exports = (sequelize) => {
             manager_phone: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
-                unique: true,
             },
             manager_email: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
-                unique: true,
             },
             min_temp: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                allowNull: true,
             },
             max_temp: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                allowNull: true,
             },
             min_hum: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                allowNull: true,
             },
             max_hum: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                allowNull: true,
             },
             user_id: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
-                unique: true,
+                allowNull: true,
             },
         },
         {
             timestamps: true,
+            tableName: 'location',
             charset: "utf8"
+
         });
 };

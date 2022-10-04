@@ -3,24 +3,26 @@ module.exports = (sequelize) => {
     return sequelize.define(
         'container',
         {
+            deleted_at: {
+                type: Sequelize.DATE,
+                allowNull: true,
+            },
             name: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
-                unique: true,
             },
             weight: {
-                type: Sequelize.STRING(255),
+                type: Sequelize.FLOAT,
                 allowNull: false,
-                unique: true,
             },
             earlivery_device_id: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
-                unique: true,
+                allowNull: true
             },
         },
         {
             timestamps: true,
-            charset: "utf8"
+            charset: "utf8",
+            tableName: 'container',
         });
 };

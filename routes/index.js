@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const auth = require('./auth');
-// const home = require('./home');
+const home = require('./home');
 // const stock = require('./stock');
 // const item = require('./item');
 // const env_info = require('./envInfo');
@@ -11,7 +11,7 @@ const user = require('./users');
 
 router.use('/users', user);
 router.use('/auth', auth);
-//router.use('/home', home);
+router.use('/home', home);
 // router.use('/stock', stock);
 // router.use('/item', item);
 // router.use('/envInfo', env_info);

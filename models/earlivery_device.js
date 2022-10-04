@@ -3,57 +3,62 @@ module.exports = (sequelize) => {
     return sequelize.define(
         'earlivery_device',
         {
+            deleted_at: {
+                type: Sequelize.DATE,
+                allowNull: true,
+            },
             nick_name: {
                 type: Sequelize.STRING(255),
-                allowNull: false,
-                unique: true,
+                allowNull: true,
             },
             device_number: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                unique: true,
             },
             address: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
-                unique: true,
             },
             detailed_address: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
-                unique: true,
             },
             description: {
                 type: Sequelize.STRING(255),
                 allowNull: true,
             },
             order_weight: {
-                type: Sequelize.INTEGER,
-                allowNull: false,
-                unique: true,
+                type: Sequelize.FLOAT,
+                allowNull: true,
             },
             order_state: {
                 type: Sequelize.STRING(255),
-                allowNull: false,
-                unique: true,
+                allowNull: true,
             },
             active: {
                 type: Sequelize.STRING(255),
                 allowNull: false,
             },
+            container_max_weight: {
+                type: Sequelize.FLOAT,
+                allowNull: true,
+            },
             item_id: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
-                unique: true,
+                allowNull: true
+            },
+            container_id: {
+                type: Sequelize.INTEGER,
+                allowNull: false
             },
             location_id: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
-                unique: true,
+                allowNull: true
             },
         },
         {
             timestamps: true,
+            tableName: 'earlivery_device',
             charset: "utf8"
         });
 };

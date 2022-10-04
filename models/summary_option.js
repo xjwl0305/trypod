@@ -3,10 +3,13 @@ module.exports = (sequelize) => {
     return sequelize.define(
         'summary_option',
         {
+            deleted_at: {
+                type: Sequelize.DATE,
+                allowNull: true,
+            },
             report_writing_cycle: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                unique: true,
             },
             base_time: {
                 type: Sequelize.DATE,
@@ -15,6 +18,7 @@ module.exports = (sequelize) => {
         },
         {
             timestamps: true,
+            tableName: 'summary_option',
             charset: "utf8"
         });
 };

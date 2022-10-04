@@ -1,68 +1,76 @@
 const Sequelize = require('sequelize');
 module.exports = (sequelize) => {
     return sequelize.define(
-        'item',
+        'summary_content',
         {
-            deleted_at: {
-                type: Sequelize.DATE,
-                allowNull: true
-            },
-            name: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-            },
-            category: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-            },
-            code: {
-                type: Sequelize.STRING(255),
-                allowNull: false,
-            },
-            unit_weight: {
-                type: Sequelize.FLOAT,
-                allowNull: false,
-            },
-            alarm_weight: {
-                type: Sequelize.FLOAT,
-                allowNull: false,
-            },
-            max_weight: {
-                type: Sequelize.FLOAT,
-                allowNull: true,
-            },
-            image_url: {
-                type: Sequelize.STRING(255),
-                allowNull: false
-            },
-            description: {
-                type: Sequelize.STRING(255),
-                allowNull: true
-            },
-            division: {
-                type: Sequelize.STRING(255),
-                allowNull: true,
-            },
-            vaild_date: {
-                type: Sequelize.DATE,
-                allowNull: true,
-            },
-            price: {
+            device_number: {
                 type: Sequelize.INTEGER,
-                allowNull: true,
+                allowNull: false,
             },
-            recommand_order_weight: {
+            item_name: {
+                type: Sequelize.STRING(255),
+                allowNull: false,
+            },
+            item_category: {
+                type: Sequelize.STRING(255),
+                allowNull: false,
+            },
+            item_code: {
+                type: Sequelize.STRING(255),
+                allowNull: false,
+            },
+            weight: {
                 type: Sequelize.FLOAT,
-                allowNull: true,
+                allowNull: false,
             },
-            volume: {
+            battery: {
+                type: Sequelize.FLOAT,
+                allowNull: false,
+            },
+            branch_name: {
                 type: Sequelize.STRING(255),
                 allowNull: true,
             },
+            warehouse_name: {
+                type: Sequelize.STRING(255),
+                allowNull: true,
+            },
+            layer_name: {
+                type: Sequelize.STRING(255),
+                allowNull: true,
+            },
+            connection: {
+                type: Sequelize.STRING(255),
+                allowNull: true,
+            },
+            last_date_time: {
+                type: Sequelize.DATE,
+                allowNull: false,
+            },
+            interval: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
+            usage_weight: {
+                type: Sequelize.FLOAT,
+                allowNull: false,
+            },
+            container_weight: {
+                type: Sequelize.FLOAT,
+                allowNull: false,
+            },
+            real_weight: {
+                type: Sequelize.FLOAT,
+                allowNull: false,
+            },
+            summary_id: {
+                type: Sequelize.INTEGER,
+                allowNull: true
+            }
         },
         {
             timestamps: true,
-            tableName: 'item',
+            tableName: 'summary_content',
             charset: "utf8"
         });
 };

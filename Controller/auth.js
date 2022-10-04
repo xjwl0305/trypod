@@ -2,6 +2,7 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const config = require('../config')
 const authDB = require('../db/auth')
+const {sendMail} = require("../DB/auth");
 
 exports.registerAPI = (req, res) => {
     const {id, password} = req.body
@@ -142,4 +143,26 @@ exports.changePWAPI = (req, res) => {
     authDB.changePassword(password, req.decoded.uid)
         .then(respond)
         .catch(onError)
+}
+
+exports.SendMail = (req, res) => {
+    const {mail} = req.body;
+    authDB.sendMail(mail, res)
+        .then(res.status(200).json(
+            {
+                message: 'send in succe ssfully',
+                success: true,
+            })
+        );
+}
+
+exports.checkMailCode = (req, res) => {
+    authDB.checkCode(req)
+        .then(result => {
+            res.status(200).json(
+                {
+                    message: 'auth complete',
+                    success: result
+                });
+        });
 }

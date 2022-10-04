@@ -2,7 +2,7 @@
   "development": {
     "username": "admin",
     "password": "earlivery0102!",
-    "database": "earlivery",
+    "database": "test",
     "host": "earlivery.cckpfejc2svw.ap-northeast-2.rds.amazonaws.com",
     "dialect": "mysql",
     "timezone": "+09:00"

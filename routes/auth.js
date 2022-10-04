@@ -9,5 +9,7 @@ router.post('/enroll', userController.enrollAPI);
 router.post('/login', userController.loginAPI);
 router.get('/check', userController.checkAPI);
 router.post('/password', userController.changePWAPI);
+router.get('/sendMail', userController.SendMail);
+router.get('/checkEmail', userController.checkMailCode);
 
 module.exports = router;
