@@ -19,10 +19,22 @@ module.exports = (sequelize) => {
                 type: Sequelize.INTEGER,
                 allowNull: true
             },
+            created_at:{
+                type: 'TIMESTAMP',
+                defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+                allowNull: false
+            },
+            updated_at:{
+                type: 'TIMESTAMP',
+                defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+                allowNull: false
+            }
         },
         {
             timestamps: true,
             charset: "utf8",
             tableName: 'container',
+            createdAt: false,
+            updatedAt: false
         });
 };

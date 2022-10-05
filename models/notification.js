@@ -14,11 +14,23 @@ module.exports = (sequelize) => {
             user_id: {
                 type: Sequelize.INTEGER,
                 allowNull: true,
+            },
+            created_at:{
+                type: 'TIMESTAMP',
+                defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+                allowNull: false
+            },
+            updated_at:{
+                type: 'TIMESTAMP',
+                defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+                allowNull: false
             }
         },
         {
             timestamps: true,
             tableName: 'notification',
-            charset: "utf8"
+            charset: "utf8",
+            createdAt: false,
+            updatedAt: false
         });
 };

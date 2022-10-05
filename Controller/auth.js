@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const config = require('../config')
-const authDB = require('../db/auth')
+const authDB = require('../DB/auth')
 const {sendMail} = require("../DB/auth");
 
 exports.registerAPI = (req, res) => {

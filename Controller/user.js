@@ -1,4 +1,4 @@
-const userDB = require('../db/user')
+const userDB = require('../DB/user')
 const admin = require('firebase-admin')
 
 exports.updateUserAPI = (req, res) => {
