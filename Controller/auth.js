@@ -53,13 +53,13 @@ exports.enrollAPI = (req, res) => {
             if (result) {
                 res.status(200).json(
                     {
-                        "success": result
+                        "success": true
                     }
                 )
             } else {
                 res.status(403).json(
                     {
-                        "success": result
+                        "success": false
                     }
                 )
             }

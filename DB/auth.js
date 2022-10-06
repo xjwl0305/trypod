@@ -1,11 +1,12 @@
 const models = require("../models");
-const {Op} = require("sequelize");
+const {Op, QueryTypes} = require("sequelize");
 const {auth} = require("firebase-admin");
 const nodemailer = require('nodemailer');
 const util = require("util");
 const ejs = require('ejs');
 const bcrypt = require('bcrypt');
 const cookie = require('cookie');
+const {sequelize} = require("../models");
 // const app = require('express')();
 // const bodyParser = require('body-parser');
 // const cookieParser = require('cookie-parser');
@@ -31,15 +32,38 @@ exports.checkExist = (data) => {
             });
     });
 }
-exports.enroll = (data) => {
-    return new Promise(resolve => {
-        models.user.create(data)
-            .then(resolve(true))
-            .catch(err => {
-                console.log(err);
-                resolve(false);
-            });
-    });
+exports.enroll = async (data) => {
+    // return new Promise(resolve => {
+    //     models.user.create({account: data.account, hashed_password: data.hashed_password, phone: data.phone, email: data.email, company_name: data.company_name, company_address: data.company_address,
+    //         company_detailed_address: data.company_detailed_address, division: data.division})
+    //         .then(result => {
+    //             resolve(true);
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //             resolve(false);
+    //         });
+    // });
+    const {account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division} = data;
+    try{
+        return await sequelize.query('insert into user (account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division) ' +
+            'VALUES (:account, :phone, :hashed_password, :email, :company_name, :company_address, :company_detailed_address, :division);',
+            {
+                replacements: {
+                    account: account,
+                    phone: phone,
+                    hashed_password: hashed_password,
+                    email: email,
+                    company_name: company_name,
+                    company_address: company_address,
+                    company_detailed_address: company_detailed_address,
+                    division: division
+                }, type: QueryTypes.INSERT
+            })
+    }catch (err){
+        console.log(err);
+        return false;
+    }
 }
 exports.checkPassword = (data) => {
     return new Promise(resolve => {
