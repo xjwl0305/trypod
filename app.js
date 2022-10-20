@@ -8,6 +8,8 @@ var cors = require('cors');
 const indexRouter = require('./routes/index');
 const sequelize = require('./models').sequelize; // sequelize require
 const config = require('./config');
+const schedule = require("node-schedule");
+const request = require("request-promise-native");
 
 var app = express();
 sequelize.sync({ force: false }) // 서버 실행시마다 테이블을 재생성할건지에 대한 여부
@@ -17,6 +19,8 @@ sequelize.sync({ force: false }) // 서버 실행시마다 테이블을 재생�
     .catch((err) => {
       console.error(err);
     });
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

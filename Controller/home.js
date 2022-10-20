@@ -21,12 +21,41 @@ exports.checkStock = (req, res) => {
     );
 }
 
+exports.checkDevice = (req, res) => {
+    const uid = req.body.uid
+    homeDB.CheckDevice(uid).then(result =>
+        res.status(200).json(
+            {
+                "strange_device": result
+            })
+);
+}
 exports.itemStock = (req, res) => {
     const uid = req.body.uid
     homeDB.ItemStock(uid).then(result =>
         res.status(200).json(
             {
                 "itemStock": result
+            })
+    );
+}
+
+exports.GetWarehouse = (req, res) => {
+    const uid = req.body.uid
+    homeDB.getWarehouse(uid).then(result =>
+        res.status(200).json(
+            {
+                "Warehouse": result
+            })
+    );
+}
+
+exports.checkWarehouse = (req, res) => {
+    const uid = req.body.uid
+    homeDB.CheckWarehouse(uid).then(result =>
+        res.status(200).json(
+            {
+                "strange_warehouse": result
             })
     );
 }

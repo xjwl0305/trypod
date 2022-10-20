@@ -6,12 +6,10 @@ module.exports = (sequelize) => {
             temperature: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                unique: true
             },
             humidity: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
-                unique: true
             },
             location_id: {
                 type: Sequelize.INTEGER,
