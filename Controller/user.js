@@ -24,6 +24,7 @@ exports.getPhoneAPI = (req, res) => {
             })
         })
 }
+
 exports.getEmailAPI = (req, res) => {
     userDB.getEmail()
         .then(email => {
@@ -32,6 +33,7 @@ exports.getEmailAPI = (req, res) => {
             })
         })
 }
+
 exports.getCompanyNameAPI = (req, res) => {
     userDB.getCompany_name()
         .then(company_name => {
@@ -40,6 +42,7 @@ exports.getCompanyNameAPI = (req, res) => {
             })
         })
 }
+
 exports.getCompanyAddressAPI = (req, res) => {
     userDB.getCompany_address()
         .then(company_address => {
@@ -48,11 +51,22 @@ exports.getCompanyAddressAPI = (req, res) => {
             })
         })
 }
+
 exports.getCompanyDetailedAPI = (req, res) => {
     userDB.getCompany_detailed_address()
         .then(company_detailed_address => {
             res.status(200).json({
                 company_detailed_address: company_detailed_address
+            })
+        })
+}
+
+exports.getTotalInfo = (req, res) => {
+    const uid = req.body.uid;
+    userDB.getTotalInfo(uid)
+        .then(result => {
+            res.status(200).json({
+                info: result
             })
         })
 }

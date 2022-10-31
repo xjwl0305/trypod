@@ -50,6 +50,16 @@ exports.GetWarehouse = (req, res) => {
     );
 }
 
+exports.GetStockChange = (req, res) => {
+    const uid = req.body.uid
+    homeDB.getStockChange(uid).then(result =>
+        res.status(200).json(
+            {
+                "Stock_Change": result
+            })
+    );
+}
+
 exports.checkWarehouse = (req, res) => {
     const uid = req.body.uid
     homeDB.CheckWarehouse(uid).then(result =>

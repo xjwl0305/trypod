@@ -59,6 +59,9 @@ db.user.belongsTo(db.summary_option, {foreignKey:'summary_option_id', targetKey:
 // user와 summary 1:N
 db.user.hasMany(db.summary, {foreignKey: 'user_id', sourceKey: 'id'});
 db.summary.belongsTo(db.user, {foreignKey:'user_id', targetKey: 'id'});
+// user와 container 1:N
+db.user.hasMany(db.container, {foreignKey: 'user_id', sourceKey: 'id'});
+db.container.belongsTo(db.user, {foreignKey:'user_id', targetKey: 'id'});
 
 // location과 earlivery_device 1:N
 db.location.hasMany(db.earlivery_device, {foreignKey: 'location_id', sourceKey:'id'});
@@ -73,9 +76,10 @@ db.device_raw_data.belongsTo(db.earlivery_device, {foreignKey: 'earlivery_device
 // earlivery_device 와 device_raw_data N:1
 db.item.hasMany(db.earlivery_device, {foreignKey: 'item_id', sourceKey:'id'});
 db.earlivery_device.belongsTo(db.earlivery_device, {foreignKey: 'item_id', targetKey:'id'});
-// earlivery_device 와 container 1:N
-db.earlivery_device.hasMany(db.container, {foreignKey: 'earlivery_device_id', sourceKey:'id'});
-db.container.belongsTo(db.earlivery_device, {foreignKey: 'earlivery_device_id', targetKey:'id'});
+// earlivery_device 와 container N:1
+db.container.hasMany(db.earlivery_device, {foreignKey: 'container_id', sourceKey:'id'});
+db.earlivery_device.belongsTo(db.container, {foreignKey: 'container_id', targetKey:'id'});
+
 
 // summary 와 summary_content 1:N
 db.summary.hasMany(db.summary_content, {foreignKey: 'summary_id', sourceKey:'id'});

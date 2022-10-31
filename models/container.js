@@ -15,9 +15,9 @@ module.exports = (sequelize) => {
                 type: Sequelize.FLOAT,
                 allowNull: false,
             },
-            earlivery_device_id: {
+            user_id: {
                 type: Sequelize.INTEGER,
-                allowNull: true
+                allowNull: false,
             },
             created_at:{
                 type: 'TIMESTAMP',

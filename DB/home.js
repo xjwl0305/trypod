@@ -53,7 +53,14 @@ exports.getWarehouse = async (uid) => {
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }
 
+exports.getStockChange = async (uid) => {
+    return await sequelize.query('select device_number, earlivery_device.created_at from earlivery_device left join location l on earlivery_device.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid order by earlivery_device.created_at;',
+        {replacements: {uid: uid}, type: QueryTypes.SELECT});
+}
+
 exports.CheckWarehouse = async (uid) => {
     return await sequelize.query('select l.warehouse_name, temperature, humidity, A.updated_at from warehouse_raw_data as A left join location l on A.location_id = l.id left join user u on l.user_id = u.id where A.temperature < l.min_temp or A.temperature > l.max_temp or A.humidity < l.min_hum or A.humidity > l.max_hum and u.id = :uid',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }
+
+

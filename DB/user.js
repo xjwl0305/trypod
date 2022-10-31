@@ -1,4 +1,6 @@
 const models = require("../models");
+const {sequelize} = require("../models");
+const {QueryTypes} = require("sequelize");
 
 exports.getPhone = (uid) => {
     return new Promise(resolve => {
@@ -81,4 +83,10 @@ exports.updateUser = (data, uid) => {
             .then(resolve)
             .catch(reject);
     });
+}
+
+exports.getTotalInfo = async (uid) => {
+    const [result, metadata] = await sequelize.query('select company_name, phone, email, company_address, company_detailed_address from user where id = :uid',
+        {replacements: {uid: uid}, type: QueryTypes.SELECT});
+    return result
 }
