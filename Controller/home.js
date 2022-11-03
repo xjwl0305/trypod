@@ -2,7 +2,7 @@ const homeDB = require('../DB/home')
 
 
 exports.getWeight = (req, res) => {
-    const uid = req.body.uid
+    const uid = req.query.uid
     homeDB.findWeight(uid).then(result =>
         res.status(200).json(
             {
@@ -12,7 +12,7 @@ exports.getWeight = (req, res) => {
 }
 
 exports.checkStock = (req, res) => {
-    const uid = req.body.uid
+    const uid = req.query.uid
     homeDB.CheckStock(uid).then(result =>
         res.status(200).json(
             {
@@ -22,7 +22,7 @@ exports.checkStock = (req, res) => {
 }
 
 exports.checkDevice = (req, res) => {
-    const uid = req.body.uid
+    const uid = req.query.uid
     homeDB.CheckDevice(uid).then(result =>
         res.status(200).json(
             {
@@ -31,7 +31,7 @@ exports.checkDevice = (req, res) => {
 );
 }
 exports.itemStock = (req, res) => {
-    const uid = req.body.uid
+    const uid = req.query.uid
     homeDB.ItemStock(uid).then(result =>
         res.status(200).json(
             {
@@ -41,17 +41,18 @@ exports.itemStock = (req, res) => {
 }
 
 exports.GetWarehouse = (req, res) => {
-    const uid = req.body.uid
+    const uid = req.query.uid
     homeDB.getWarehouse(uid).then(result =>
         res.status(200).json(
             {
                 "Warehouse": result
             })
     );
+    const b = 1;
 }
 
 exports.GetStockChange = (req, res) => {
-    const uid = req.body.uid
+    const uid = req.query.uid
     homeDB.getStockChange(uid).then(result =>
         res.status(200).json(
             {
@@ -61,7 +62,7 @@ exports.GetStockChange = (req, res) => {
 }
 
 exports.checkWarehouse = (req, res) => {
-    const uid = req.body.uid
+    const uid = req.query.uid
     homeDB.CheckWarehouse(uid).then(result =>
         res.status(200).json(
             {

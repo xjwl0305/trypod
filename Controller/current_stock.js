@@ -5,7 +5,7 @@ const Excel = require("exceljs");
 
 
 exports.itemGetAll = (req, res) => {
-    const uid = req.body.uid
+    const uid = req.query.uid
     curStockDB.itemGetAll(uid).then(result =>
         res.status(200).json(
             {
@@ -15,8 +15,8 @@ exports.itemGetAll = (req, res) => {
 }
 
 exports.itemGetBranch = (req, res) => {
-    const uid = req.body.uid;
-    const branch_name = req.body.branch_name;
+    const uid = req.query.uid;
+    const branch_name = req.query.branch_name;
     curStockDB.itemGetBranch(uid, branch_name).then(result =>
         res.status(200).json(
             {
@@ -26,9 +26,9 @@ exports.itemGetBranch = (req, res) => {
 }
 
 exports.itemGetLayer = (req, res) => {
-    const uid = req.body.uid;
-    const branch_name = req.body.branch_name;
-    const layer_name = req.body.layer_name;
+    const uid = req.query.uid;
+    const branch_name = req.query.branch_name;
+    const layer_name = req.query.layer_name;
     curStockDB.itemGetLayer(uid, branch_name, layer_name).then(result =>
         res.status(200).json(
             {
@@ -38,10 +38,10 @@ exports.itemGetLayer = (req, res) => {
 }
 
 exports.itemGetHouse = (req, res) => {
-    const uid = req.body.uid;
-    const branch_name = req.body.branch_name;
-    const layer_name = req.body.layer_name;
-    const warehouse_name = req.body.warehouse_name;
+    const uid = req.query.uid;
+    const branch_name = req.query.branch_name;
+    const layer_name = req.query.layer_name;
+    const warehouse_name = req.query.warehouse_name;
     curStockDB.itemGetHouse(uid, branch_name, layer_name, warehouse_name).then(result =>
         res.status(200).json(
             {
@@ -51,7 +51,7 @@ exports.itemGetHouse = (req, res) => {
 }
 
 exports.deviceGetAll = (req, res) => {
-    const uid = req.body.uid
+    const uid = req.query.uid
     curStockDB.deviceGetAll(uid).then(result =>
         res.status(200).json(
             {
@@ -61,8 +61,8 @@ exports.deviceGetAll = (req, res) => {
 }
 
 exports.deviceGetBranch = (req, res) => {
-    const uid = req.body.uid;
-    const branch_name = req.body.branch_name;
+    const uid = req.query.uid;
+    const branch_name = req.query.branch_name;
     curStockDB.deviceGetBranch(uid, branch_name).then(result =>
         res.status(200).json(
             {
@@ -72,9 +72,9 @@ exports.deviceGetBranch = (req, res) => {
 }
 
 exports.deviceGetLayer = (req, res) => {
-    const uid = req.body.uid;
-    const branch_name = req.body.branch_name;
-    const layer_name = req.body.layer_name;
+    const uid = req.query.uid;
+    const branch_name = req.query.branch_name;
+    const layer_name = req.query.layer_name;
     curStockDB.deviceGetLayer(uid, branch_name, layer_name).then(result =>
         res.status(200).json(
             {
@@ -84,10 +84,10 @@ exports.deviceGetLayer = (req, res) => {
 }
 
 exports.deviceGetHouse = (req, res) => {
-    const uid = req.body.uid;
-    const branch_name = req.body.branch_name;
-    const layer_name = req.body.layer_name;
-    const warehouse_name = req.body.warehouse_name;
+    const uid = req.query.uid;
+    const branch_name = req.query.branch_name;
+    const layer_name = req.query.layer_name;
+    const warehouse_name = req.query.warehouse_name;
     curStockDB.deviceGetHouse(uid, branch_name, layer_name, warehouse_name).then(result =>
         res.status(200).json(
             {
@@ -97,10 +97,10 @@ exports.deviceGetHouse = (req, res) => {
 }
 
 exports.reportDownload = async (req, res) => {
-    const uid = req.body.uid;
-    const date = req.body.date;
-    const select = req.body.select;
-    const data = req.body.data;
+    const uid = req.query.uid;
+    const date = req.query.date;
+    const select = req.query.select;
+    const data = req.query.data;
     const currentDate = new Date();
     const currentDayFormat = currentDate.getFullYear()+"-"+
         (currentDate.getMonth()+1)+"-"+
@@ -150,11 +150,14 @@ exports.reportDownload = async (req, res) => {
         // })
     }
 }
-// exports.reportDownload = (req, res) => {
-//     const uid = req.body.uid;
-//     const date = req.body.date;
-//     const select = req.body.select;
-//     const data = req.body.data;
-//     curStockDB.reportDownload(uid, date, select, data).then(result =>
-//     res.status(200)1);
-// }
+exports.ReportSetting = (req, res) => {
+    const uid = req.query.uid;
+    const base_time = req.query.base_time;
+    const cycle_time = req.query.cycle_time;
+    curStockDB.ReportSetting(uid, base_time, cycle_time).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}

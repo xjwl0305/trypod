@@ -5,7 +5,7 @@ const authDB = require('../DB/auth')
 const {sendMail} = require("../DB/auth");
 
 exports.registerAPI = (req, res) => {
-    const {id, password} = req.body
+    const {id, password} = req.query
     authDB.checkPassword({id, password}).then(result =>
         res.status(200).json(
             {
@@ -24,7 +24,7 @@ exports.getAPI = (req, res) => {
 }
 
 exports.phone_duplicateAPI = (req, res) => {
-    const {phone} = req.body
+    const {phone} = req.query
     authDB.checkExist({phone})
         .then(result => {
             if (result) {
@@ -44,7 +44,7 @@ exports.phone_duplicateAPI = (req, res) => {
 }
 
 exports.enrollAPI = (req, res) => {
-    let {account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division} = req.body
+    let {account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division} = req.query
     hashed_password = crypto.createHmac('sha1', config.secret)
         .update(hashed_password)
         .digest('base64')
@@ -67,7 +67,7 @@ exports.enrollAPI = (req, res) => {
 }
 
 exports.loginAPI = (req, res) => {
-    let {account, password} = req.body
+    let {account, password} = req.query
     password = crypto.createHmac('sha1', config.secret)
         .update(password)
         .digest('base64')
@@ -136,7 +136,7 @@ exports.changePWAPI = (req, res) => {
         })
     }
 
-    let password = req.body.password;
+    let password = req.query.password;
     password = crypto.createHmac('sha1', config.secret)
         .update(password)
         .digest('base64')
@@ -146,7 +146,7 @@ exports.changePWAPI = (req, res) => {
 }
 
 exports.SendMail = (req, res) => {
-    const {mail} = req.body;
+    const {mail} = req.query;
     authDB.sendMail(mail, res)
         .then(res.status(200).json(
             {

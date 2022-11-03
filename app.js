@@ -11,7 +11,8 @@ const config = require('./config');
 const schedule = require("node-schedule");
 const request = require("request-promise-native");
 
-var app = express();
+const app = express();
+app.use(cors());
 sequelize.sync({ force: false }) // 서버 실행시마다 테이블을 재생성할건지에 대한 여부
     .then(() => {
       console.log('데이터베이스 연결 성공');

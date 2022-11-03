@@ -49,6 +49,7 @@ exports.ItemStock = async (uid) => {
 }
 
 exports.getWarehouse = async (uid) => {
+    const a = 1
     return await sequelize.query('select A.id, A.temperature, A.humidity from warehouse_raw_data as A left join location l on A.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }

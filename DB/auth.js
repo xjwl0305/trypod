@@ -45,9 +45,10 @@ exports.enroll = async (data) => {
     //         });
     // });
     const {account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division} = data;
-    try{
-        return await sequelize.query('insert into user (account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division) ' +
-            'VALUES (:account, :phone, :hashed_password, :email, :company_name, :company_address, :company_detailed_address, :division);',
+
+
+        const enroll_result =  await sequelize.query('insert into user (account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division) ' +
+            'VALUES (:account, :phone, :hashed_password, :email, :company_name, :company_address, :company_detailed_address, :division)',
             {
                 replacements: {
                     account: account,
@@ -60,10 +61,26 @@ exports.enroll = async (data) => {
                     division: division
                 }, type: QueryTypes.INSERT
             })
-    }catch (err){
-        console.log(err);
-        return false;
-    }
+
+    const find_enroll = await sequelize.query('select id from user where account = :account and hashed_password = :hashed_password',
+        {
+            replacements: {
+                account: account,
+                hashed_password: hashed_password
+            }, type: QueryTypes.SELECT
+        })
+    const create_default_location = await sequelize.query('insert into location(branch_name, branch_address, branch_detailed_address, manager_name, manager_phone, manager_email, user_id) values (:company_name, :company_address, :company_detailed_address, :company_name, :phone, :email, :user_id) ',
+        {
+            replacements: {
+                company_name: company_name,
+                company_address: company_address,
+                company_detailed_address: company_detailed_address,
+                phone: phone,
+                email: email,
+                user_id: find_enroll[0].id
+            }, type: QueryTypes.INSERT
+        })
+    return enroll_result
 }
 exports.checkPassword = (data) => {
     return new Promise(resolve => {
