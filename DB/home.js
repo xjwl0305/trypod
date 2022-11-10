@@ -35,7 +35,7 @@ exports.CheckStock = async (uid) => {
     });
     total.count = Out_stock;
     total.list = arrPointHistory;
-    console.log(total);
+    console.log(total);jj
     return total;
 }
 exports.CheckDevice = async (uid) => {
@@ -50,7 +50,7 @@ exports.ItemStock = async (uid) => {
 
 exports.getWarehouse = async (uid) => {
     const a = 1
-    return await sequelize.query('select A.id, A.temperature, A.humidity from warehouse_raw_data as A left join location l on A.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid',
+    return await sequelize.query('select A.id, A.temperature, A.humidity, l.min_temp, l.max_temp, l.min_hum, l.max_hum  from warehouse_raw_data as A left join location l on A.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }
 

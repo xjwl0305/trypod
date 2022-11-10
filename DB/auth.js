@@ -114,7 +114,8 @@ exports.sendMail = (mail, res) => {
             maxAge: 300000
         });
         ejs.renderFile('./public/template/authMail.ejs', {authCode : authNum}, function (err, data) {
-            if(err){console.log(err)}
+            if(err){resolve(false);
+                return false;}
             emailTemplete = data;
         });
         let transporter = nodemailer.createTransport({
@@ -135,18 +136,66 @@ exports.sendMail = (mail, res) => {
         });
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
-                console.log(error);
+                resolve(false);
+                return false;
             }
-            console.log("Finish sending email");
-            transporter.close();
-            // res.send({result: 'send'})
+            resolve(true);
         })
+        resolve(true);
     });
 }
 
+exports.CheckSendMail = async (mail, res) => {
+    const result = await sequelize.query('select count(id) as count from user where email = :mail',
+        {replacements: {mail: mail}, type: QueryTypes.SELECT});
+
+
+    return new Promise(resolve => {
+        if(result[0].count === 0) {
+            resolve(false);
+            return false;
+        }
+        let authNum = Math.random().toString().substr(2, 6);
+        let emailTemplete;
+        res.cookie('hashAuth', authNum, {
+            maxAge: 300000
+        });
+        ejs.renderFile('./public/template/authMail.ejs', {authCode: authNum}, function (err, data) {
+            if (err) {
+                resolve(false);
+                return false;
+            }
+            emailTemplete = data;
+        });
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: false,
+            auth: {
+                user: "tripodlabofficial@gmail.com",
+                pass: "crsrkauyojqqkrke",
+            },
+        });
+        let mailOptions = transporter.sendMail({
+            from: `트라이포드랩`,
+            to: mail,
+            subject: '회원가입을 위한 인증번호를 입력해주세요.',
+            html: emailTemplete,
+        });
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                resolve(false);
+                return false;
+            }
+            resolve(true);
+        })
+        resolve(true);
+    });
+}
 exports.checkCode = (req) => {
     return new Promise(resolve => {
-        const {code} = req.body;
+        const {code} = req.query;
         const hashAuth = req.cookies.hashAuth;
         try {
             if(code === hashAuth) {

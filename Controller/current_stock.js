@@ -134,7 +134,6 @@ exports.reportDownload = async (req, res) => {
         ]
         data.map((item, index)=> {
             worksheet.addRow(item);
-
         })
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader("Content-Disposition", "attachment; filename=" + "test.xlsx");//menu와 파일명을 동일하게 취급하여 파일명 = 메뉴+오늘날짜.xlsx 로 셋팅
@@ -152,9 +151,7 @@ exports.reportDownload = async (req, res) => {
 }
 exports.ReportSetting = (req, res) => {
     const uid = req.query.uid;
-    const base_time = req.query.base_time;
-    const cycle_time = req.query.cycle_time;
-    curStockDB.ReportSetting(uid, base_time, cycle_time).then(result =>
+    curStockDB.ReportSetting(uid).then(result =>
         res.status(200).json(
             {
                 result

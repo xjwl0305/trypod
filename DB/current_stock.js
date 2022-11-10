@@ -105,8 +105,16 @@ exports.deviceGetHouse = async (uid, branch_name, layer_name, warehouse_name) =>
     return {"data": data};
 }
 
-exports.ReportSetting = async (uid, base_time, cycle_time) => {
-    const data = await sequelize.query('',
-        {replacements: { uid: uid , base_time: base_time, cycle_time: cycle_time}, type: QueryTypes.INSERT});
-    return {"data": data};
+exports.ReportSetting = async (uid) => {
+    let today = new Date();
+    if(today.getHours() < 5 && today.getHours() >= 0){
+        return await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:05:00:00")',
+            {replacements: { uid: uid }, type: QueryTypes.INSERT});
+    }else if(today.getHours() < 13 && today.getHours() >= 5){
+        return await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:13:00:00")',
+            {replacements: { uid: uid }, type: QueryTypes.INSERT});
+    }else{
+        return await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:21:00:00")',
+            {replacements: { uid: uid }, type: QueryTypes.INSERT});
+    }
 }

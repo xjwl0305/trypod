@@ -1,5 +1,57 @@
 const managementDB = require("../DB/management");
 
+exports.itemGetAll = (req, res) => {
+    const uid = req.query.uid
+    const offset = req.query.offset;
+    const paging = req.query.paging;
+    managementDB.itemGetAll(uid, offset, paging).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
+
+exports.itemGetBranch = (req, res) => {
+    const uid = req.query.uid;
+    const branch_name = req.query.branch_name;
+    const offset = req.query.offset;
+    const paging = req.query.paging;
+    managementDB.deviceGetBranch(uid, branch_name, offset, paging).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
+
+exports.itemGetLayer = (req, res) => {
+    const uid = req.query.uid;
+    const branch_name = req.query.branch_name;
+    const layer_name = req.query.layer_name;
+    const offset = req.query.offset;
+    const paging = req.query.paging;
+    managementDB.itemGetLayer(uid, branch_name, layer_name, offset, paging).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
+exports.itemGetHouse = (req, res) => {
+    const uid = req.query.uid;
+    const branch_name = req.query.branch_name;
+    const layer_name = req.query.layer_name;
+    const warehouse_name = req.query.warehouse_name;
+    const offset = req.query.offset;
+    const paging = req.query.paging;
+    managementDB.itemGetHouse(uid, branch_name, layer_name, warehouse_name, offset, paging).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
 exports.deviceGetAll = (req, res) => {
     const uid = req.query.uid
     const offset = req.query.offset;
@@ -11,6 +63,7 @@ exports.deviceGetAll = (req, res) => {
             })
     );
 }
+
 
 exports.deviceGetBranch = (req, res) => {
     const uid = req.query.uid;
@@ -79,7 +132,7 @@ exports.deviceUpdate = (req, res) => {
 exports.deviceDelete = (req, res) => {
     const uid = req.query.uid;
     const device_num = req.query.device_number;
-    managementDB.deviceGetDetail(uid, device_num).then(result =>
+    managementDB.deviceGetDetail(uid, device_num ).then(result =>
         res.status(200).json(
             {
                 result

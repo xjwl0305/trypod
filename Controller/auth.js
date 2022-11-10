@@ -153,8 +153,42 @@ exports.SendMail = (req, res) => {
                 message: 'send in succe ssfully',
                 success: true,
             })
-        );
+        )
+        .catch(res.status(500).json(
+            {
+                message: 'Email not exist',
+                success: false
+            }
+        ))
 }
+exports.CheckSendMail = (req, res) => {
+    const {mail} = req.query;
+    const onError = (error) => {
+        res.status(500).json({
+            message: error.message,
+            success: false
+        })
+    }
+    authDB.CheckSendMail(mail, res)
+        .then(result => {
+            if(result) {
+                res.status(200).json(
+                    {
+                        message: 'send_success',
+                        success: result
+                    });
+            }else{
+                res.status(403).json(
+                    {
+                        "message": 'invalid_mail',
+                        "success": result
+                    }
+                )
+            }
+            })
+        .catch(onError)
+}
+
 
 exports.checkMailCode = (req, res) => {
     authDB.checkCode(req)

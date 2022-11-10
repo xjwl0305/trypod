@@ -11,5 +11,6 @@ router.get('/check', userController.checkAPI);
 router.post('/password', userController.changePWAPI);
 router.get('/sendMail', userController.SendMail);
 router.get('/checkEmail', userController.checkMailCode);
+router.get('/ChecksendEmail', userController.CheckSendMail);
 
 module.exports = router;
