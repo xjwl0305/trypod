@@ -21,7 +21,23 @@ exports.findAll = () => {
 }
 exports.checkExist = (data) => {
     return new Promise(resolve => {
-        models.user.count({ where: data})
+        models.user.count({ where: {'phone' : data}
+        })
+            .then(count => {
+                if (count !== 0) {
+                    resolve(false);
+                }
+                else {
+                    resolve(true);
+                }
+            });
+    });
+}
+
+exports.checkID = (account) => {
+    return new Promise(resolve => {
+        models.user.count({ where: {'account' : account}
+        })
             .then(count => {
                 if (count !== 0) {
                     resolve(false);

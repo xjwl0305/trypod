@@ -35,9 +35,11 @@ exports.CheckStock = async (uid) => {
     });
     total.count = Out_stock;
     total.list = arrPointHistory;
-    console.log(total);jj
+    console.log(total);
     return total;
 }
+
+
 exports.CheckDevice = async (uid) => {
     return await sequelize.query('select B.device_number, i.name, weight, A.updated_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id where (data_interval < TIMESTAMPDIFF(MINUTE, A.updated_at, current_timestamp) and u.id = :uid)',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});

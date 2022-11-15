@@ -115,12 +115,28 @@ exports.loginAPI = (req, res) => {
         .catch(onError)
 }
 
-exports.checkAPI = (req, res) => {
-    res.json({
-        success: true,
-        info: req.decoded
-    })
+exports.checkID = (req, res) => {
+    const account = req.query.account;
+    authDB.checkID(account)
+        .then(result => {
+            if(result) {
+                res.status(200).json(
+                    {
+                        message: 'checkID',
+                        duplicate: true
+                    });
+            }else{
+                res.status(200).json(
+                    {
+                        message: 'checkID',
+                        duplicate: false
+                    }
+                )
+            }
+        })
 }
+
+
 
 exports.changePWAPI = (req, res) => {
     const respond = () => {
