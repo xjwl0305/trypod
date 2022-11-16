@@ -121,7 +121,7 @@ exports.layerList = async (uid, branch_name) => {
 }
 
 exports.warehouseList = async (uid, branch_name, layer_name) => {
-    return await sequelize.query('select warehouse_name, temperature, max_temp, min_temp, max_hum, min_hum from location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name;',
+    return await sequelize.query('select warehouse_name, temperature, humidity, max_temp, min_temp, max_hum, min_hum from location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name;',
         {replacements: {uid: uid, branch_name: branch_name, layer_name: layer_name}, type: QueryTypes.SELECT});
 }
 
