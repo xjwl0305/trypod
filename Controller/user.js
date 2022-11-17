@@ -2,7 +2,7 @@ const userDB = require('../DB/user')
 const admin = require('firebase-admin')
 
 exports.updateUserAPI = (req, res) => {
-    userDB.updateUser(req.query, req.decoded.uid)
+    userDB.updateUser(req.query)
         .then(() => {
             res.status(200).json({
                 success: true
@@ -11,7 +11,7 @@ exports.updateUserAPI = (req, res) => {
         .catch((err => {
             res.status(403).json({
                 success: false,
-                err
+                content: err
             });
         }));
 }
