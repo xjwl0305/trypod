@@ -26,7 +26,7 @@ exports.itemGetBranch = async (uid, branch_name) => {
         {replacements: { uid: uid , branch_name: branch_name }, type: QueryTypes.SELECT});
     const Alllayer = [];
     const result = {"data": data};
-    layer_list.forEach(function (item, index, array) {e
+    layer_list.forEach(function (item, index, array) {
         Alllayer.push(item.layer_name);
     });
     const layer = {"layer_name": Alllayer};
@@ -70,8 +70,8 @@ exports.deviceGetAll = async (uid) => {
 }
 
 exports.deviceGetBranch = async (uid, branch_name) => {
-    const data = await sequelize.query('select i.code, i.name, i.unit_weight, B.device_number ,A.data_interval, A.weight from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id ' +
-        'where u.id = :uid and l.branch_name = :branch_name order by i.name',
+    const data = await sequelize.query('select device_number, i.name, drd.weight, drd.weight, drd.created_at from earlivery_device left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id left join item i on earlivery_device.item_id = i.id left join location l on earlivery_device.location_id = l.id left join user u on l.user_id = u.id\n' +
+        'where u.id = :uid and branch_name = :branch_name order by i.name',
         {replacements: { uid: uid , branch_name: branch_name}, type: QueryTypes.SELECT});
     const layer_list = await sequelize.query('select layer_name from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name;',
         {replacements: { uid: uid , branch_name: branch_name }, type: QueryTypes.SELECT});

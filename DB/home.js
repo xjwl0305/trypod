@@ -57,7 +57,7 @@ exports.getWarehouse = async (uid) => {
 }
 
 exports.getStockChange = async (uid) => {
-    return await sequelize.query('select device_number, earlivery_device.created_at from earlivery_device left join location l on earlivery_device.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid order by earlivery_device.created_at;',
+    return await sequelize.query('select device_number, d.weight ,earlivery_device.created_at from earlivery_device left join device_raw_data d on earlivery_device.id = d.earlivery_device_id left join location l on earlivery_device.location_id = l.id left join user u on l.user_id = u.id where u.id = 1 order by earlivery_device.created_at',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }
 

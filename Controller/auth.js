@@ -156,7 +156,7 @@ exports.changePWAPI = (req, res) => {
     password = crypto.createHmac('sha1', config.secret)
         .update(password)
         .digest('base64')
-    authDB.changePassword(password, req.decoded.uid)
+    authDB.changePassword(password, req.query.uid)
         .then(respond)
         .catch(onError)
 }
