@@ -31,7 +31,7 @@ exports.deviceGetBranch = async (uid, branch_name) => {
     const data = await sequelize.query('select B.device_number, i.name, B.order_weight, l.branch_detailed_address, A.updated_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
         '                                                                                        where u.id = :uid and branch_name = :branch_name order by i.name',
         {replacements: { uid: uid , branch_name: branch_name}, type: QueryTypes.SELECT});
-    const layer_list = await sequelize.query('select layer_name from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name;',
+    const layer_list = await sequelize.query('select distinct (layer_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name;',
         {replacements: { uid: uid , branch_name: branch_name }, type: QueryTypes.SELECT});
     const Alllayer = [];
     const result = {"data": data};
@@ -46,7 +46,7 @@ exports.deviceGetLayer = async (uid, branch_name, layer_name) => {
     const data = await sequelize.query('select B.device_number, i.name, B.order_weight, l.branch_detailed_address, A.updated_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
         '                                                                                        where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name order by i.name',
         {replacements: { uid: uid , branch_name: branch_name, layer_name: layer_name}, type: QueryTypes.SELECT});
-    const warehouse_list = await sequelize.query('select warehouse_name from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name',
+    const warehouse_list = await sequelize.query('select distinct (warehouse_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name',
         {replacements: { uid: uid , branch_name: branch_name, layer_name: layer_name}, type: QueryTypes.SELECT});
     const AllHouse = [];
     const result = {"data": data};
@@ -79,7 +79,7 @@ exports.branchList = async (uid) => {
 }
 
 exports.layerList = async (uid, branch_name) => {
-    return await sequelize.query('select layer_name from location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id where u.id = :uid and branch_name = :branch_name',
+    return await sequelize.query('select distinct (layer_name) from location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id where u.id = :uid and branch_name = :branch_name',
         {replacements: {uid: uid, branch_name: branch_name}, type: QueryTypes.SELECT});
 }
 
