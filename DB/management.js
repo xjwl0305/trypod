@@ -74,17 +74,21 @@ exports.deviceGetDetail = async (uid, device_num) => {
 
 // 지점관리
 exports.branchList = async (uid) => {
-    return await sequelize.query('select distinct(branch_name), branch_address, manager_name, manager_phone, manager_email from location left join user u on location.user_id = u.id where u.id = :uid',
+    return await sequelize.query('select branch_name, branch_address, manager_name, manager_phone, manager_email from location left join user u on location.user_id = u.id where u.id = :uid and layer_name is null',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }
 
 exports.layerList = async (uid, branch_name) => {
-    return await sequelize.query('select distinct (layer_name) from location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id where u.id = :uid and branch_name = :branch_name',
+    return await sequelize.query('select layer_name, w.temperature from location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id where u.id = :uid and branch_name = :branch_name and warehouse_name is null and layer_name is not null',
         {replacements: {uid: uid, branch_name: branch_name}, type: QueryTypes.SELECT});
 }
 
 exports.warehouseList = async (uid, branch_name, layer_name) => {
-    return await sequelize.query('select warehouse_name, temperature, humidity, max_temp, min_temp, max_hum, min_hum from location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name;',
+    return await sequelize.query('select warehouse_name, temperature, max_temp, min_temp, max_hum, min_hum, w.created_at from (select location_id, max(created_at) as max_date from warehouse_raw_data group by location_id) as t2, location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id\n' +
+        'where u.id = :uid and w.location_id = t2.location_id and w.updated_at = t2.max_date and branch_name = :branch_name and layer_name = :layer_name and warehouse_name is not null\n' +
+        'union select warehouse_name, temperature, max_temp, min_temp, max_hum, min_hum, w.created_at from location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id\n' +
+        'where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name and warehouse_name is not null and w.created_at is null\n' +
+        'order by warehouse_name',
         {replacements: {uid: uid, branch_name: branch_name, layer_name: layer_name}, type: QueryTypes.SELECT});
 }
 
