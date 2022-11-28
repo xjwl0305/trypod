@@ -279,10 +279,10 @@ exports.warehouseUpdate = (req, res) => {
     const max_temp = req.query.max_temp;
     const min_hum = req.query.min_hum;
     const max_hum = req.query.max_hum;
-    const pre_warehouse_name = req.query.pre_layer_name;
+    const pre_warehouse_name = req.query.pre_warehouse_name;
     const pre_manager_name = req.query.pre_manager_name;
     const pre_manager_phone = req.query.pre_manager_phone;
-    managementDB.warehouseAdd(uid, warehouse_name, manager_name, manager_phone, manager_email, max_temp, min_temp, max_hum, min_hum, pre_warehouse_name, pre_manager_name, pre_manager_phone).then(result =>
+    managementDB.warehouseUpdate(uid, warehouse_name, manager_name, manager_phone, manager_email, max_temp, min_temp, max_hum, min_hum, pre_warehouse_name, pre_manager_name, pre_manager_phone).then(result =>
         res.status(200).json(
             {
                 result
