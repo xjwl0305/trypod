@@ -14,7 +14,7 @@ exports.itemAdd = async (name, category, code, unit_weight, safe_weight, max_wei
 }
 
 exports.deviceGetAll = async (uid) => {
-    const data = await sequelize.query('select B.device_number, i.name, B.order_weight, l.branch_detailed_address, A.updated_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid order by i.name',
+    const data = await sequelize.query('select B.device_number, i.name, B.order_weight, l.branch_detailed_address, A.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid order by i.name',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
     const branch_list = await sequelize.query('select distinct(branch_name) from location left join user u on location.user_id = u.id where u.id = :uid',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
@@ -28,7 +28,7 @@ exports.deviceGetAll = async (uid) => {
 }
 
 exports.deviceGetBranch = async (uid, branch_name) => {
-    const data = await sequelize.query('select B.device_number, i.name, B.order_weight, l.branch_detailed_address, A.updated_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
+    const data = await sequelize.query('select B.device_number, i.name, B.order_weight, l.branch_detailed_address, A.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
         '                                                                                        where u.id = :uid and branch_name = :branch_name order by i.name',
         {replacements: { uid: uid , branch_name: branch_name}, type: QueryTypes.SELECT});
     const layer_list = await sequelize.query('select distinct (layer_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name;',
@@ -43,7 +43,7 @@ exports.deviceGetBranch = async (uid, branch_name) => {
 }
 
 exports.deviceGetLayer = async (uid, branch_name, layer_name) => {
-    const data = await sequelize.query('select B.device_number, i.name, B.order_weight, l.branch_detailed_address, A.updated_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
+    const data = await sequelize.query('select B.device_number, i.name, B.order_weight, l.branch_detailed_address, A.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
         '                                                                                        where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name order by i.name',
         {replacements: { uid: uid , branch_name: branch_name, layer_name: layer_name}, type: QueryTypes.SELECT});
     const warehouse_list = await sequelize.query('select distinct (warehouse_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name',
@@ -58,14 +58,14 @@ exports.deviceGetLayer = async (uid, branch_name, layer_name) => {
 }
 
 exports.deviceGetHouse = async (uid, branch_name, layer_name, warehouse_name) => {
-    const data = await sequelize.query('select B.device_number, i.name, B.order_weight, l.branch_detailed_address, A.updated_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
+    const data = await sequelize.query('select B.device_number, i.name, B.order_weight, l.branch_detailed_address, A.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
         '                                                                                        where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name and warehouse_name = :warehouse_name order by i.name',
         {replacements: { uid: uid , branch_name: branch_name, layer_name: layer_name, warehouse_name: warehouse_name}, type: QueryTypes.SELECT});
     return {"data": data};
 }
 
 exports.deviceGetDetail = async (uid, device_num) => {
-    const data = await sequelize.query('select A.device_number, A.item_id, drd.battery,drd.updated_at, A.order_weight, o.date_time as order_time,A.created_at, A.description, c.name\n' +
+    const data = await sequelize.query('select A.device_number, A.item_id, drd.battery,drd.created_at, A.order_weight, o.date_time as order_time,A.created_at, A.description, c.name\n' +
         'from earlivery_device as A left join device_raw_data drd on A.id = drd.earlivery_device_id left join orderlist o on o.device_number = A.device_number left join container c on A.container_id = c.id left join location l on A.location_id = l.id left join user u on l.user_id = u.id\n' +
         'where u.id = :uid and A.device_number = :device_num',
         {replacements: { uid: uid , device_num: device_num }, type: QueryTypes.SELECT});
@@ -85,7 +85,7 @@ exports.layerList = async (uid, branch_name) => {
 
 exports.warehouseList = async (uid, branch_name, layer_name) => {
     return await sequelize.query('select warehouse_name, temperature, humidity, max_temp, min_temp, max_hum, min_hum, manager_name, manager_email, manager_phone, w.created_at from (select location_id, max(created_at) as max_date from warehouse_raw_data group by location_id) as t2, location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id\n' +
-        'where u.id = :uid and w.location_id = t2.location_id and w.updated_at = t2.max_date and branch_name = :branch_name and layer_name = :layer_name and warehouse_name is not null\n' +
+        'where u.id = :uid and w.location_id = t2.location_id and w.created_at = t2.max_date and branch_name = :branch_name and layer_name = :layer_name and warehouse_name is not null\n' +
         'union select warehouse_name, temperature, humidity, max_temp, min_temp, max_hum, min_hum, manager_name, manager_email, manager_phone, w.created_at from location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id\n' +
         'where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name and warehouse_name is not null and w.created_at is null\n' +
         'order by warehouse_name',
