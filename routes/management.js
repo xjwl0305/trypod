@@ -15,5 +15,11 @@ router.get('/warehouseInfo', managementController.warehouseInfo);
 router.get('/branchAdd', managementController.branchAdd);
 router.get('/layerAdd', managementController.layerAdd);
 router.get('/warehouseAdd', managementController.warehouseAdd);
+router.get('/branchUpdate', managementController.branchUpdate);
+router.get('/layerUpdate', managementController.layerUpdate);
+router.get('/warehouseUpdate', managementController.warehouseUpdate);
+router.get('/branchDel', managementController.branchDel);
+router.get('/layerDel', managementController.layerDel);
+router.get('/warehouseDel', managementController.warehouseDel);
 
 module.exports = router;

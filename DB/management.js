@@ -84,28 +84,28 @@ exports.layerList = async (uid, branch_name) => {
 }
 
 exports.warehouseList = async (uid, branch_name, layer_name) => {
-    return await sequelize.query('select warehouse_name, temperature, max_temp, min_temp, max_hum, min_hum, manager_name, manager_email, manager_phone, w.created_at from (select location_id, max(created_at) as max_date from warehouse_raw_data group by location_id) as t2, location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id\n' +
+    return await sequelize.query('select warehouse_name, temperature, humidity, max_temp, min_temp, max_hum, min_hum, manager_name, manager_email, manager_phone, w.created_at from (select location_id, max(created_at) as max_date from warehouse_raw_data group by location_id) as t2, location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id\n' +
         'where u.id = :uid and w.location_id = t2.location_id and w.updated_at = t2.max_date and branch_name = :branch_name and layer_name = :layer_name and warehouse_name is not null\n' +
-        'union select warehouse_name, temperature, max_temp, min_temp, max_hum, min_hum, manager_name, manager_email, manager_phone, w.created_at from location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id\n' +
+        'union select warehouse_name, temperature, humidity, max_temp, min_temp, max_hum, min_hum, manager_name, manager_email, manager_phone, w.created_at from location as l left join warehouse_raw_data w on l.id = w.location_id left join user u on l.user_id = u.id\n' +
         'where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name and warehouse_name is not null and w.created_at is null\n' +
         'order by warehouse_name',
         {replacements: {uid: uid, branch_name: branch_name, layer_name: layer_name}, type: QueryTypes.SELECT});
 }
 
 exports.warehouseInfo = async (uid, layer_name, warehouse_name) => {
-    return await sequelize.query('select temperature, humidity, w.created_at from warehouse_raw_data as w left join location l on l.id = w.location_id left join user u on l.user_id = u.id where u.id = :uid and l.layer_name = :layer_name and l.warehouse_name = :warehouse_name',
+    return await sequelize.query('select w.temperature, w.humidity, w.created_at from warehouse_raw_data w left join location l on w.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid and layer_name = :layer_name and warehouse_name = :warehouse_name;',
         {replacements: {uid: uid, layer_name: layer_name, warehouse_name: warehouse_name}, type: QueryTypes.SELECT});
 }
 
-exports.branchAdd = async (uid, branch_name, branch_address, branch_detailed_address, manager_name, manager_phone, manager_email) => {
-    return await sequelize.query('insert into location (branch_name, branch_address, branch_detailed_address, manager_name, manager_phone, manager_email, user_id) values (:branch_name, :branch_address, :branch_detailed_address, :manager_name, :manager_phone, :manager_email, :uid)',
-        {replacements: {uid: uid, branch_name: branch_name, branch_address: branch_address, branch_detailed_address: branch_detailed_address, manager_name: manager_name, manager_phone: manager_phone, manager_email: manager_email}, type: QueryTypes.INSERT});
+exports.branchAdd = async (uid, branch_name, branch_address, manager_name, manager_phone, manager_email) => {
+    return await sequelize.query('insert into location (branch_name, branch_address, manager_name, manager_phone, manager_email, user_id) values (:branch_name, :branch_address, :manager_name, :manager_phone, :manager_email, :uid)',
+        {replacements: {uid: uid, branch_name: branch_name, branch_address: branch_address, manager_name: manager_name, manager_phone: manager_phone, manager_email: manager_email}, type: QueryTypes.INSERT});
 }
 
-exports.layerAdd = async (uid, branch_name, branch_address, branch_detailed_address, layer_name, manager_name, manager_phone, manager_email, min_temp, max_temp) => {
-    return await sequelize.query('insert into location (branch_name, branch_address, branch_detailed_address, layer_name, manager_name, manager_phone, manager_email, min_temp, max_temp, user_id)\n' +
+exports.layerAdd = async (uid, branch_name, branch_address, layer_name, manager_name, manager_phone, manager_email) => {
+    return await sequelize.query('insert into location (branch_name, branch_address, layer_name, manager_name, manager_phone, manager_email, user_id)\n' +
         'values (:branch_name, :branch_address, :branch_detailed_address,  :layer_name, :manager_name,:manager_phone, :manager_email, :min_temp, :max_temp, :uid)',
-        {replacements: {uid: uid, branch_name: branch_name,branch_address: branch_address,branch_detailed_address: branch_detailed_address, layer_name: layer_name, manager_name: manager_name,manager_phone: manager_phone,manager_email: manager_email, min_temp: min_temp , max_temp: max_temp}, type: QueryTypes.INSERT});
+        {replacements: {uid: uid, branch_name: branch_name,branch_address: branch_address, layer_name: layer_name, manager_name: manager_name,manager_phone: manager_phone,manager_email: manager_email}, type: QueryTypes.INSERT});
 }
 
 exports.warehouseAdd = async (uid, branch_name, branch_address, branch_detailed_address, layer_name, warehouse_name, manager_name, manager_phone, manager_email, min_temp, max_temp, min_hum, max_hum) => {
@@ -115,4 +115,37 @@ exports.warehouseAdd = async (uid, branch_name, branch_address, branch_detailed_
                 min_temp: min_temp, min_hum: min_hum, max_temp: max_temp, max_hum: max_hum}, type: QueryTypes.INSERT});
 
 }
+exports.branchUpdate = async (uid, branch_name, branch_address, manager_name, manager_phone, manager_email, pre_branch_name, pre_manager_name, pre_manager_phone) => {
+    return await sequelize.query('update location l left join user u on l.user_id = u.id set branch_name = :branch_name, branch_address = :branch_address, manager_name = :manager_name, manager_phone = :manager_phone, manager_email = :manager_email\n' +
+        'where u.id = :uid and branch_name = :pre_branch_name and manager_name = :pre_manager_name and manager_phone = :pre_manager_phone and layer_name is null',
+        {replacements: {uid: uid, branch_name: branch_name, branch_address: branch_address, manager_name: manager_name, manager_phone: manager_phone, manager_email: manager_email, pre_branch_name: pre_branch_name,
+            pre_manager_name: pre_manager_name, pre_manager_phone: pre_manager_phone}, type: QueryTypes.UPDATE});
+}
 
+exports.layerUpdate = async (uid, layer_name, manager_name, manager_phone, manager_email, pre_layer_name, pre_manager_name, pre_manager_phone) => {
+    return await sequelize.query('update location l left join user u on l.user_id = u.id set layer_name = :layer_name, manager_name = :manager_name, manager_phone = :manager_phone, manager_email = :manager_email\n' +
+        'where u.id = :uid and layer_name = :pre_layer_name and manager_name = :pre_manager_name and manager_phone = :pre_manager_phone and warehouse_name is null',
+        {replacements: {uid: uid, layer_name: layer_name, manager_name: manager_name, manager_phone: manager_phone, manager_email: manager_email, pre_layer_name: pre_layer_name,
+                pre_manager_name: pre_manager_name, pre_manager_phone: pre_manager_phone}, type: QueryTypes.UPDATE});
+}
+
+exports.warehouseUpdate = async (uid, warehouse_name, manager_name, manager_phone, manager_email, max_temp, min_temp, max_hum, min_hum, pre_warehouse_name, pre_manager_name, pre_manager_phone) => {
+    return await sequelize.query('update location l left join user u on l.user_id = u.id set warehouse_name = :warehouse_name, manager_name = :manager_name, manager_phone = :manager_phone, manager_email = :manager_email, max_temp = :max_temp, min_temp = :min_temp, max_hum = :max_hum, min_hum = :min_hum\n' +
+        'where u.id = :uid and warehouse_name = :pre_warehouse_name and manager_name = :pre_manager_name and manager_phone = :pre_manager_phone',
+        {replacements: {uid: uid, warehouse_name: warehouse_name, manager_name: manager_name, manager_phone: manager_phone, manager_email: manager_email, pre_warehouse_name: pre_warehouse_name,
+                pre_manager_name: pre_manager_name, pre_manager_phone: pre_manager_phone, max_temp: max_temp, min_temp: min_temp, max_hum: max_hum, min_hum: min_hum}, type: QueryTypes.UPDATE});
+}
+exports.branchDel = async (uid, branch_name, manager_name, manager_phone) => {
+    return await sequelize.query('delete from location l where user_id = :uid and branch_name = :branch_name and manager_name = :manager_name and manager_phone = :manager_phone and layer_name is null',
+        {replacements: {uid: uid, branch_name: branch_name, manager_name: manager_name, manager_phone: manager_phone}, type: QueryTypes.DELETE});
+}
+
+exports.layerDel = async (uid, layer_name, manager_name, manager_phone) => {
+    return await sequelize.query('delete from location l where user_id = :uid and layer_name = :layer_name and manager_name = :manager_name and manager_phone = :manager_phone and warehouse_name is null',
+        {replacements: {uid: uid, layer_name: layer_name, manager_name: manager_name, manager_phone: manager_phone}, type: QueryTypes.DELETE});
+}
+
+exports.warehouseDel = async (uid, warehouse_name, manager_name, manager_phone, max_temp, min_temp, max_hum, min_hum) => {
+    return await sequelize.query('delete from location l where user_id = :uid and warehouse_name = :warehouse_name and manager_name = :manager_name and manager_phone = :manager_phone and max_temp = :max_temp and min_temp = :min_temp and max_hum = :max_hum and min_hum = :min_hum',
+        {replacements: {uid: uid, warehouse_name: warehouse_name, manager_name: manager_name, manager_phone: manager_phone, max_temp: max_temp, min_temp: min_temp, max_hum: max_hum, min_hum: min_hum}, type: QueryTypes.DELETE});
+}
