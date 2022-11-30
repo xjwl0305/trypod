@@ -170,3 +170,8 @@ exports.ReportSetting = async (uid) => {
             {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
     }
 }
+
+exports.ReportTimeSetting = async (uid, base_time, report_writing_cycle ) => {
+    return await sequelize.query('update summary_option left join user u on summary_option.id = u.summary_option_id set base_time = :base_time, report_writing_cycle = :report_writing_cycle where u.id = :uid',
+        {replacements: { uid: uid , base_time: base_time, report_writing_cycle: report_writing_cycle}, type: QueryTypes.UPDATE});
+}

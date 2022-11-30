@@ -15,4 +15,5 @@ router.get('/deviceGetHouse', curStockController.deviceGetHouse);
 //router.get('/deviceGetDetail', curStockController.deviceGetDetail);
 router.post('/reportDownload', curStockController.reportDownload);
 router.get('/reportSetting', curStockController.ReportSetting);
+router.get('/reportTimeSetting', curStockController.ReportTimeSetting);
 module.exports = router;

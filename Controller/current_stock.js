@@ -179,3 +179,15 @@ exports.ReportSetting = (req, res) => {
             })
     );
 }
+exports.ReportTimeSetting = (req, res) => {
+    const uid = req.query.uid;
+    const base_time = req.query.base_time;
+    const report_writing_cycle = req.query.report_writing_cycle;
+
+    curStockDB.ReportTimeSetting(uid, base_time, report_writing_cycle).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
