@@ -90,6 +90,12 @@ exports.itemGetDetail = async (code) => {
 
     return Object.assign(connect_device, current_stock2, current_usings, device_status2);
 }
+// 재고량 변화
+exports.itemStockChange = async (code) => {
+    return await sequelize.query('select device_number, weight, device_raw_data.created_at from device_raw_data left join earlivery_device ed on device_raw_data.earlivery_device_id = ed.id left join item i on ed.item_id = i.id where i.code = :code',
+        {replacements: { code: code }, type: QueryTypes.SELECT});
+}
+
 
 // 디바이스 재고 현황
 exports.deviceGetAll = async (uid) => {
@@ -145,13 +151,22 @@ exports.deviceGetHouse = async (uid, branch_name, layer_name, warehouse_name) =>
 exports.ReportSetting = async (uid) => {
     let today = new Date();
     if(today.getHours() < 5 && today.getHours() >= 0){
-        return await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:05:00:00")',
+        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:05:00:00")',
             {replacements: { uid: uid }, type: QueryTypes.INSERT});
+        const get_id = await sequelize.query('select last_insert_id() as last');
+        return await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
+            {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
     }else if(today.getHours() < 13 && today.getHours() >= 5){
-        return await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:13:00:00")',
+        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:13:00:00")',
             {replacements: { uid: uid }, type: QueryTypes.INSERT});
+        const get_id = await sequelize.query('select last_insert_id() as last');
+        return await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
+            {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
     }else{
-        return await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:21:00:00")',
+        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:21:00:00")',
             {replacements: { uid: uid }, type: QueryTypes.INSERT});
+        const get_id = await sequelize.query('select last_insert_id() as last');
+        return await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
+            {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
     }
 }

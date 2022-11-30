@@ -60,6 +60,17 @@ exports.itemGetDetail = (req, res) => {
     );
 }
 
+exports.itemStockChange = (req, res) => {
+    const item_code = req.query.code;
+    curStockDB.itemStockChange(item_code).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
+
+
 exports.deviceGetAll = (req, res) => {
     const uid = req.query.uid
     curStockDB.deviceGetAll(uid).then(result =>
