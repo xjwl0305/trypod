@@ -148,6 +148,47 @@ exports.deviceGetHouse = async (uid, branch_name, layer_name, warehouse_name) =>
     return {"data": data};
 }
 
+exports.deviceGetDetail = async (device_num) => {
+    // 연동 디바이스
+    const connect_item = await sequelize.query('select name from item left join earlivery_device ed on item.id = ed.item_id where ed.device_number = :device_num',
+        {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
+    // 최근 재고량
+    const current_stock = await sequelize.query('select sum(drd.weight) as current_stock from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
+        'where earlivery_device.device_number = :device_num and t2.max_date = drd.created_at',
+        {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
+    const connect_item2 = {"connect_item": connect_item}
+    const current_stock2 = {"current_stock": current_stock};
+    // 디바이스 상태 이상
+    const device_status = await sequelize.query('select device_number, drd.data_interval, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
+        'where earlivery_device.device_number = :device_num and t2.max_date = drd.created_at',
+        {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
+    let today = new Date();
+    const connect_error_device = [];
+    device_status.forEach(function (item, index, array) {
+        let date = new Date(item.created_at);
+        date.setMinutes(date.getMinutes()+ item.data_interval+5);
+        if (date < today){
+            connect_error_device.push('통신불량');
+        }
+    });
+    const device_status2 = {"device_status": connect_error_device};
+
+    // 최근 사용량
+    const current_using = await sequelize.query('select sum(drd.weight) as data from (select earlivery_device_id, max(created_at) as max_date from device_raw_data where device_raw_data.created_at not in (select max(created_at) from device_raw_data group by earlivery_device_id) group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
+        'where earlivery_device.device_number = :device_num and t2.max_date = drd.created_at',
+        {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
+
+    const current_using_data = current_stock[0].current_stock - current_using[0].data
+    const current_usings = {"current_using": current_using_data}
+
+    return Object.assign(connect_item2, current_stock2, current_usings, device_status2);
+}
+// 재고량 변화
+exports.deviceStockChange = async (device_num) => {
+    return await sequelize.query('select device_number, weight, device_raw_data.created_at from device_raw_data left join earlivery_device ed on device_raw_data.earlivery_device_id = ed.id left join item i on ed.item_id = i.id where ed.device_number = :device_num',
+        {replacements: { device_num: device_num }, type: QueryTypes.SELECT});
+}
+
 exports.ReportSetting = async (uid) => {
     let today = new Date();
     if(today.getHours() < 5 && today.getHours() >= 0){

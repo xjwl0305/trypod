@@ -117,6 +117,26 @@ exports.deviceGetHouse = (req, res) => {
     );
 }
 
+exports.deviceGetDetail = (req, res) => {
+    const device_num = req.query.device_num;
+    curStockDB.deviceGetDetail(device_num).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
+
+exports.deviceStockChange = (req, res) => {
+    const device_num = req.query.device_num;
+    curStockDB.deviceStockChange(device_num).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
+
 exports.reportDownload = async (req, res) => {
     const uid = req.query.uid;
     const date = req.query.date;
@@ -129,9 +149,9 @@ exports.reportDownload = async (req, res) => {
     if(select === 1) { // 아이템별 보고서 다운로드
 
     }else{ // 디바이스별 보고서 다운로드
-        const data = await sequelize.query('select e.device_number, i.name, i.category, i.code, drd.weight, c.weight as container_weight, drd.battery, l.branch_name, l.layer_name, l.warehouse_name, drd.data_interval, drd.updated_at from (select earlivery_device_id, max(updated_at) as max_date from device_raw_data group by earlivery_device_id) as t2, device_raw_data drd\n' +
+        const data = await sequelize.query('select e.device_number, i.name, i.category, i.code, drd.weight, c.weight as container_weight, drd.battery, l.branch_name, l.layer_name, l.warehouse_name, drd.data_interval, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, device_raw_data drd\n' +
             'left join earlivery_device e on drd.earlivery_device_id = e.id left join item i on i.id = e.item_id left join location l on e.location_id = l.id left join container c on c.id = e.container_id left join user u on l.user_id = u.id\n' +
-            'where drd.earlivery_device_id = t2.earlivery_device_id and drd.updated_at = t2.max_date and u.id = :uid',
+            'where drd.earlivery_device_id = t2.earlivery_device_id and drd.created_at = t2.max_date and u.id = :uid',
             {replacements: { uid: uid}, type: QueryTypes.SELECT});
 
         const DeviceReport = new Excel.Workbook();
