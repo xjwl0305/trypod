@@ -157,21 +157,21 @@ exports.reportDownload = async (req, res) => {
         const DeviceReport = new Excel.Workbook();
         const worksheet = DeviceReport.addWorksheet('DeviceReport Excel Sheet');
         worksheet.columns = [
-            {header: '디바이스 넘버', key: 'device_number', width: 60},
-            {header: '아이템명', key: 'name', width: 60},
-            {header: '카테고리', key: 'category', width: 60},
-            {header: '제품코드', key: 'code', width: 60},
-            {header: '무게(kg)', key: 'weight', width: 60},
-            {header: '컨테이너 무게(kg)', key: 'container_weight', width: 60},
-            {header: '순재고무게(kg)', key: 'N/A weight', width: 60},
-            {header: '사용량(kg)', key: 'used', width: 60},
-            {header: '배터리(%)', key: 'battery', width: 60},
-            {header: '지점', key: 'branch_name', width: 60},
-            {header: '구역', key: 'layer_name', width: 60},
-            {header: '창고', key: 'warehouse_name', width: 60},
-            {header: '데이터 전송 간격', key: 'data_interval', width: 60},
-            {header: '연결상태', key: 'N/A', width: 60},
-            {header: '최근접속', key: 'created_at', width: 60}
+            {header: '디바이스 넘버', key: 'device_number', width: 20},
+            {header: '아이템명', key: 'name', width: 20},
+            {header: '카테고리', key: 'category', width: 20},
+            {header: '제품코드', key: 'code', width: 20},
+            {header: '무게(kg)', key: 'weight', width: 20},
+            {header: '컨테이너 무게(kg)', key: 'container_weight', width: 20},
+            {header: '순재고무게(kg)', key: 'N/A weight', width: 20},
+            {header: '사용량(kg)', key: 'used', width: 20},
+            {header: '배터리(%)', key: 'battery', width: 20},
+            {header: '지점', key: 'branch_name', width: 20},
+            {header: '구역', key: 'layer_name', width: 20},
+            {header: '창고', key: 'warehouse_name', width: 20},
+            {header: '데이터 전송 간격', key: 'data_interval', width: 20},
+            {header: '연결상태', key: 'N/A', width: 20},
+            {header: '최근접속', key: 'created_at', width: 20}
         ]
         data.map((item, index)=> {
             worksheet.addRow(item);

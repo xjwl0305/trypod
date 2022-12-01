@@ -72,6 +72,32 @@ exports.deviceGetDetail = async (uid, device_num) => {
     return {"data": data};
 }
 
+exports.deviceUpdateData = async (uid, device_num) => {
+    const data = await sequelize.query('select distinct A.id as item_id, A.name as item_name from item as A left join earlivery_device ed on A.id = ed.item_id left join container c on c.id = ed.container_id = c.id left join device_raw_data drd on ed.id = drd.earlivery_device_id left join location l on ed.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid',
+        {replacements: { uid: uid }, type: QueryTypes.SELECT});
+    const item_list = {"item_list": data};
+    const data2 = await sequelize.query('select c.name as conatiner_name from item as A left join earlivery_device ed on A.id = ed.item_id left join container c on c.id = ed.container_id = c.id left join location l on ed.location_id = l.id left join user u on l.user_id = u.id where u.id = 1 and ed.device_number = :device_num',
+        {replacements: { uid: uid , device_num: device_num}, type: QueryTypes.SELECT});
+    const container_name = {"container_name": data2};
+    const data3 = await sequelize.query('select container.id as container_id, name as container_list from container left join user u on container.user_id = u.id where u.id = :uid',
+        {replacements: { uid: uid }, type: QueryTypes.SELECT});
+    const container_list = {"container_list": data3};
+    const data4 = await sequelize.query('select branch_name, layer_name, warehouse_name from location as l left join user u on l.user_id = u.id where u.id = :uid order by branch_name',
+        {replacements: { uid: uid }, type: QueryTypes.SELECT});
+    const where = {"branches": data4};
+    return Object.assign(item_list, container_name, container_list, where);
+}
+
+exports.deviceUpdateApply = async (uid, item_id, location_id, container_id, order_weight, description, device_num) => {
+    return await sequelize.query('update earlivery_device set item_id = :item_id , location_id= :location_id, container_id = :container_id, order_weight = :order_weight, description = :description where device_number = :device_num',
+        {replacements: { uid: uid, item_id: item_id, location_id: location_id, container_id: container_id, order_weight: order_weight, description: description, device_num: device_num}, type: QueryTypes.SELECT});
+}
+
+exports.deviceDelete = async (device_num) => {
+    return await sequelize.query('delete from earlivery_device where device_number = :device_num',
+        {replacements: { device_num: device_num}, type: QueryTypes.DELETE});
+}
+
 // 지점관리
 exports.branchList = async (uid) => {
     return await sequelize.query('select branch_name, branch_address, manager_name, manager_phone, manager_email from location left join user u on location.user_id = u.id where u.id = :uid and layer_name is null',

@@ -85,10 +85,26 @@ exports.deviceGetDetail = (req, res) => {
     );
 }
 
-exports.deviceUpdate = (req, res) => {
+exports.deviceUpdateData = (req, res) => {
     const uid = req.query.uid;
     const device_num = req.query.device_number;
-    managementDB.deviceGetDetail(uid, device_num).then(result =>
+    managementDB.deviceUpdateData(uid, device_num).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
+
+exports.deviceUpdateApply = (req, res) => {
+    const uid = req.query.uid;
+    const item_id = req.query.item_id;
+    const location_id = req.query.location_id;
+    const container_id = req.query.container_id;
+    const order_weight = req.query.order_weight;
+    const description = req.query.description;
+    const device_num = req.query.device_number;
+    managementDB.deviceUpdateApply(uid, item_id, location_id, container_id, order_weight, description, device_num).then(result =>
         res.status(200).json(
             {
                 result
@@ -97,9 +113,8 @@ exports.deviceUpdate = (req, res) => {
 }
 
 exports.deviceDelete = (req, res) => {
-    const uid = req.query.uid;
     const device_num = req.query.device_number;
-    managementDB.deviceGetDetail(uid, device_num ).then(result =>
+    managementDB.deviceDelete(uid, device_num).then(result =>
         res.status(200).json(
             {
                 result
