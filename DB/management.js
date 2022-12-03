@@ -90,7 +90,7 @@ exports.deviceUpdateData = async (uid, device_num) => {
 
 exports.deviceUpdateApply = async (uid, item_id, location_id, container_id, order_weight, description, device_num) => {
     return await sequelize.query('update earlivery_device set item_id = :item_id , location_id= :location_id, container_id = :container_id, order_weight = :order_weight, description = :description where device_number = :device_num',
-        {replacements: { uid: uid, item_id: item_id, location_id: location_id, container_id: container_id, order_weight: order_weight, description: description, device_num: device_num}, type: QueryTypes.SELECT});
+        {replacements: { uid: uid, item_id: item_id, location_id: location_id, container_id: container_id, order_weight: order_weight, description: description, device_num: device_num}, type: QueryTypes.UPDATE});
 }
 
 exports.deviceDelete = async (device_num) => {
@@ -130,8 +130,8 @@ exports.branchAdd = async (uid, branch_name, branch_address, manager_name, manag
 
 exports.layerAdd = async (uid, branch_name, branch_address, layer_name, manager_name, manager_phone, manager_email) => {
     return await sequelize.query('insert into location (branch_name, branch_address, layer_name, manager_name, manager_phone, manager_email, user_id)\n' +
-        'values (:branch_name, :branch_address, :branch_detailed_address,  :layer_name, :manager_name,:manager_phone, :manager_email, :min_temp, :max_temp, :uid)',
-        {replacements: {uid: uid, branch_name: branch_name,branch_address: branch_address, layer_name: layer_name, manager_name: manager_name,manager_phone: manager_phone,manager_email: manager_email}, type: QueryTypes.INSERT});
+        'values (:branch_name, :branch_address, :layer_name, :manager_name, :manager_phone, :manager_email, :uid)',
+        {replacements: {uid: uid, branch_name: branch_name, branch_address: branch_address, layer_name: layer_name, manager_name: manager_name, manager_phone: manager_phone,manager_email: manager_email}, type: QueryTypes.INSERT});
 }
 
 exports.warehouseAdd = async (uid, branch_name, branch_address, branch_detailed_address, layer_name, warehouse_name, manager_name, manager_phone, manager_email, min_temp, max_temp, min_hum, max_hum) => {

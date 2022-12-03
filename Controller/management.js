@@ -114,7 +114,7 @@ exports.deviceUpdateApply = (req, res) => {
 
 exports.deviceDelete = (req, res) => {
     const device_num = req.query.device_number;
-    managementDB.deviceDelete(uid, device_num).then(result =>
+    managementDB.deviceDelete(device_num).then(result =>
         res.status(200).json(
             {
                 result

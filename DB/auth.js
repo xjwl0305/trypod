@@ -61,8 +61,6 @@ exports.enroll = async (data) => {
     //         });
     // });
     const {account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division} = data;
-
-
         const enroll_result =  await sequelize.query('insert into user (account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division) ' +
             'VALUES (:account, :phone, :hashed_password, :email, :company_name, :company_address, :company_detailed_address, :division)',
             {
@@ -77,7 +75,6 @@ exports.enroll = async (data) => {
                     division: division
                 }, type: QueryTypes.INSERT
             })
-
     const find_enroll = await sequelize.query('select id from user where account = :account and hashed_password = :hashed_password',
         {
             replacements: {
@@ -96,7 +93,7 @@ exports.enroll = async (data) => {
                 user_id: find_enroll[0].id
             }, type: QueryTypes.INSERT
         })
-    return enroll_result
+    return enroll_result;
 }
 exports.checkPassword = (data) => {
     return new Promise(resolve => {

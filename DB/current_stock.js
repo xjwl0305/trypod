@@ -5,7 +5,7 @@ const Excel = require('exceljs');
 const moment = require('moment');
 // 아이템 재고 현황
 exports.itemGetAll = async (uid) => {
-    const data = await sequelize.query('select i.code, i.name, i.unit_weight, B.device_number ,A.data_interval, A.weight from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid order by i.name',
+    const data = await sequelize.query('select i.code, i.name, i.unit_weight,i.safe_weight, B.device_number ,A.data_interval, A.weight, A.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid order by i.name',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
     const branch_list = await sequelize.query('select distinct(branch_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name is not null',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
@@ -19,7 +19,7 @@ exports.itemGetAll = async (uid) => {
 }
 
 exports.itemGetBranch = async (uid, branch_name) => {
-    const data = await sequelize.query('select i.code, i.name, i.unit_weight, B.device_number ,A.data_interval, A.weight from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id ' +
+    const data = await sequelize.query('select i.code, i.name, i.unit_weight,i.safe_weight, B.device_number ,A.data_interval, A.weight, A.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id ' +
         'where u.id = :uid and l.branch_name = :branch_name order by i.name',
         {replacements: { uid: uid , branch_name: branch_name}, type: QueryTypes.SELECT});
     const layer_list = await sequelize.query('select distinct(layer_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name and layer_name is not null',
@@ -34,7 +34,7 @@ exports.itemGetBranch = async (uid, branch_name) => {
 }
 
 exports.itemGetLayer = async (uid, branch_name, layer_name) => {
-    const data = await sequelize.query('select i.code, i.name, i.unit_weight, B.device_number ,A.data_interval, A.weight from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id' +
+    const data = await sequelize.query('select i.code, i.name, i.unit_weight,i.safe_weight, B.device_number ,A.data_interval, A.weight, A.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id' +
         ' where u.id = :uid and l.layer_name = :layer_name and branch_name = :branch_name order by i.name',
         {replacements: { uid: uid , branch_name: branch_name, layer_name: layer_name}, type: QueryTypes.SELECT});
     const warehouse_list = await sequelize.query('select distinct(warehouse_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name and warehouse_name is not null',
@@ -49,7 +49,7 @@ exports.itemGetLayer = async (uid, branch_name, layer_name) => {
 }
 
 exports.itemGetHouse = async (uid, branch_name, layer_name, warehouse_name) => {
-    const data = await sequelize.query('select i.code, i.name, i.unit_weight, B.device_number ,A.data_interval, A.weight from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
+    const data = await sequelize.query('select i.code, i.name, i.unit_weight,i.safe_weight, B.device_number ,A.data_interval, A.weight, A.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
         'where u.id = :uid and l.layer_name = :layer_name and branch_name = :branch_name and warehouse_name = warehouse_name order by i.name',
         {replacements: { uid: uid , branch_name: branch_name, layer_name: layer_name, warehouse_name: warehouse_name}, type: QueryTypes.SELECT});
     return {"data": data};
