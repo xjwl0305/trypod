@@ -3,6 +3,9 @@ const {sequelize} = require("../models");
 const {QueryTypes} = require("sequelize");
 const Excel = require('exceljs');
 const moment = require('moment');
+const schedule = require('node-schedule');
+
+
 // 아이템 재고 현황
 exports.itemGetAll = async (uid) => {
     const data = await sequelize.query('select i.code, i.name, i.unit_weight,i.safe_weight, B.device_number ,A.data_interval, A.weight, A.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid order by i.name',
@@ -191,6 +194,7 @@ exports.deviceStockChange = async (device_num) => {
 
 exports.ReportSetting = async (uid) => {
     let today = new Date();
+
     if(today.getHours() < 5 && today.getHours() >= 0){
         const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:05:00:00")',
             {replacements: { uid: uid }, type: QueryTypes.INSERT});

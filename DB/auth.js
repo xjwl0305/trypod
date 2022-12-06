@@ -49,17 +49,6 @@ exports.checkID = (account) => {
     });
 }
 exports.enroll = async (data) => {
-    // return new Promise(resolve => {
-    //     models.user.create({account: data.account, hashed_password: data.hashed_password, phone: data.phone, email: data.email, company_name: data.company_name, company_address: data.company_address,
-    //         company_detailed_address: data.company_detailed_address, division: data.division})
-    //         .then(result => {
-    //             resolve(true);
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //             resolve(false);
-    //         });
-    // });
     const {account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division} = data;
         const enroll_result =  await sequelize.query('insert into user (account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division) ' +
             'VALUES (:account, :phone, :hashed_password, :email, :company_name, :company_address, :company_detailed_address, :division)',

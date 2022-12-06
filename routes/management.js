@@ -8,6 +8,7 @@ router.get('/deviceGetAll', managementController.deviceGetAll);
 router.get('/deviceGetBranch', managementController.deviceGetBranch);
 router.get('/deviceGetLayer', managementController.deviceGetLayer);
 router.get('/deviceGetHouse', managementController.deviceGetHouse);
+router.get('/deviceGetDetail', managementController.deviceGetDetail);
 router.get('/deviceUpdateData', managementController.deviceUpdateData);
 router.get('/deviceUpdateApply', managementController.deviceUpdateApply);
 router.get('/deviceDelete', managementController.deviceDelete);

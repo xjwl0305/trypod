@@ -27,6 +27,8 @@ exports.itemAdd = (req, res) => {
             })
     );
 }
+
+
 exports.deviceGetAll = (req, res) => {
     const uid = req.query.uid
     managementDB.deviceGetAll(uid).then(result =>
@@ -76,14 +78,15 @@ exports.deviceGetHouse = (req, res) => {
 
 exports.deviceGetDetail = (req, res) => {
     const uid = req.query.uid;
-    const device_num = req.query.device_number;
-    managementDB.deviceGetDetail(uid, device_num).then(result =>
+    const device_id = req.query.device_id;
+    managementDB.deviceGetDetail(uid, device_id).then(result =>
         res.status(200).json(
             {
                 result
             })
     );
 }
+
 
 exports.deviceUpdateData = (req, res) => {
     const uid = req.query.uid;

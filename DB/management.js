@@ -14,7 +14,7 @@ exports.itemAdd = async (name, category, code, unit_weight, safe_weight, max_wei
 }
 
 exports.deviceGetAll = async (uid) => {
-    const data = await sequelize.query('select distinct B.device_number, i.name, B.order_weight, l.branch_detailed_address, B.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid order by i.name',
+    const data = await sequelize.query('select distinct A.id, B.device_number, i.name, B.order_weight, l.branch_detailed_address, B.created_at from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data) as t2, device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid and t2.earlivery_device_id = A.earlivery_device_id and t2.max_date = A.created_at order by i.name',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
     const branch_list = await sequelize.query('select distinct(branch_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name is not null',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
@@ -28,8 +28,9 @@ exports.deviceGetAll = async (uid) => {
 }
 
 exports.deviceGetBranch = async (uid, branch_name) => {
-    const data = await sequelize.query('select distinct B.device_number, i.name, B.order_weight, l.branch_detailed_address, B.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
-        '                                                                                        where u.id = :uid and branch_name = :branch_name order by i.name',
+    const data = await sequelize.query('select A.id, B.device_number, i.name, B.order_weight, l.branch_detailed_address, B.created_at from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data) as t2, device_raw_data as A\n' +
+        'left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
+        'where u.id = :uid and branch_name = :branch_name and t2.earlivery_device_id = A.earlivery_device_id and t2.max_date = A.created_at order by i.name',
         {replacements: { uid: uid , branch_name: branch_name}, type: QueryTypes.SELECT});
     const layer_list = await sequelize.query('select distinct (layer_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name and layer_name is not null',
         {replacements: { uid: uid , branch_name: branch_name }, type: QueryTypes.SELECT});
@@ -43,8 +44,9 @@ exports.deviceGetBranch = async (uid, branch_name) => {
 }
 
 exports.deviceGetLayer = async (uid, branch_name, layer_name) => {
-    const data = await sequelize.query('select distinct B.device_number, i.name, B.order_weight, l.branch_detailed_address, B.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
-        '                                                                                        where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name order by i.name',
+    const data = await sequelize.query('select A.id, B.device_number, i.name, B.order_weight, l.branch_detailed_address, B.created_at from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data) as t2, device_raw_data as A\n' +
+        'left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
+        'where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name and t2.earlivery_device_id = A.earlivery_device_id and t2.max_date = A.created_at order by i.name',
         {replacements: { uid: uid , branch_name: branch_name, layer_name: layer_name}, type: QueryTypes.SELECT});
     const warehouse_list = await sequelize.query('select distinct (warehouse_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name and warehouse_name is not null',
         {replacements: { uid: uid , branch_name: branch_name, layer_name: layer_name}, type: QueryTypes.SELECT});
@@ -58,18 +60,26 @@ exports.deviceGetLayer = async (uid, branch_name, layer_name) => {
 }
 
 exports.deviceGetHouse = async (uid, branch_name, layer_name, warehouse_name) => {
-    const data = await sequelize.query('select distinct B.device_number, i.name, B.order_weight, l.branch_detailed_address, B.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
-        '                                                                                        where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name and warehouse_name = :warehouse_name order by i.name',
+    const data = await sequelize.query('select A.id, B.device_number, i.name, B.order_weight, l.branch_detailed_address, B.created_at from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data) as t2, device_raw_data as A\n' +
+        'left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
+        'where u.id = :uid and branch_name = :branch_name and layer_name = :layer_name and warehouse_name = :warehouse_name and t2.earlivery_device_id = A.earlivery_device_id and t2.max_date = A.created_at order by i.name',
         {replacements: { uid: uid , branch_name: branch_name, layer_name: layer_name, warehouse_name: warehouse_name}, type: QueryTypes.SELECT});
     return {"data": data};
 }
 
-exports.deviceGetDetail = async (uid, device_num) => {
-    const data = await sequelize.query('select A.device_number, A.item_id, drd.battery,drd.created_at, A.order_weight, o.date_time as order_time,A.created_at, A.description, c.name\n' +
-        'from earlivery_device as A left join device_raw_data drd on A.id = drd.earlivery_device_id left join orderlist o on o.device_number = A.device_number left join container c on A.container_id = c.id left join location l on A.location_id = l.id left join user u on l.user_id = u.id\n' +
-        'where u.id = :uid and A.device_number = :device_num',
-        {replacements: { uid: uid , device_num: device_num }, type: QueryTypes.SELECT});
-    return {"data": data};
+exports.deviceGetDetail = async (uid, device_id) => {
+    const data = await sequelize.query('select A.device_number, i.name as item_name , drd.battery, drd.created_at, drd.data_interval, A.order_weight, o.date_time as order_time, o.created_at as order_create_time, A.description, c.name as container_name from earlivery_device as A left join device_raw_data drd on A.id = drd.earlivery_device_id left join orderlist o on o.device_number = A.device_number left join item i on item_id = i.id left join container c on A.container_id = c.id left join location l on A.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid and drd.id = :device_id',
+        {replacements: { uid: uid , device_id: device_id }, type: QueryTypes.SELECT});
+    let today = new Date();
+    let date = new Date(data[0].created_at);
+    date.setMinutes(date.getMinutes()+ data[0].data_interval+5);
+    if (date < today){
+        data[0].connection = '통신불량';
+    }else{
+        data[0].connection = '통신양호';
+    }
+    delete data[0].data_interval
+    return {"data": data[0]};
 }
 
 exports.deviceUpdateData = async (uid, device_num) => {

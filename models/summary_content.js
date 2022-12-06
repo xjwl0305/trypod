@@ -53,7 +53,7 @@ module.exports = (sequelize) => {
             },
             usage_weight: {
                 type: Sequelize.FLOAT,
-                allowNull: false,
+                allowNull: true,
             },
             container_weight: {
                 type: Sequelize.FLOAT,
@@ -61,7 +61,7 @@ module.exports = (sequelize) => {
             },
             real_weight: {
                 type: Sequelize.FLOAT,
-                allowNull: false,
+                allowNull: true,
             },
             summary_id: {
                 type: Sequelize.INTEGER,
