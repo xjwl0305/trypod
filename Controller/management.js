@@ -9,6 +9,18 @@ exports.itemGetAll = (req, res) => {
             })
     );
 }
+exports.itemGetDetail = (req, res) => {
+    const name = req.query.name;
+    const category = req.query.category;
+    const code = req.query.code;
+
+    managementDB.itemGetDetail(name, category, code).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
 
 exports.itemAdd = (req, res) => {
     const name = req.query.name;
@@ -27,7 +39,38 @@ exports.itemAdd = (req, res) => {
             })
     );
 }
+exports.itemUpdate = (req, res) => {
+    const pre_name = req.query.pre_name;
+    const pre_category = req.query.pre_category;
+    const pre_code = req.query.pre_code;
+    const name = req.query.name;
+    const category = req.query.category;
+    const code = req.query.code;
+    const unit_weight = req.query.unit_weight;
+    const safe_weight = req.query.safe_weight;
+    const max_weight = req.query.max_weight;
+    const image_url = req.query.image_url;
+    const description = req.query.description;
 
+    managementDB.itemUpdate(name, category, code, unit_weight, safe_weight, max_weight, image_url, description, pre_name, pre_category, pre_code).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
+exports.itemDelete = (req, res) => {
+    const pre_name = req.query.pre_name;
+    const pre_category = req.query.pre_category;
+    const pre_code = req.query.pre_code;
+
+    managementDB.itemDelete(pre_name, pre_category, pre_code).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
 
 exports.deviceGetAll = (req, res) => {
     const uid = req.query.uid

@@ -7,10 +7,27 @@ exports.itemGetAll = async (id) => {
         {replacements: {id: id}, type: QueryTypes.SELECT})
 }
 
+exports.itemGetDetail = async (name, category, code) => {
+    return await sequelize.query('select item.name, category, item.code, unit_weight, safe_weight, max_weight, image_url, description from item where item.name =:name and code=:code and category = :category',
+        {replacements: { name: name, category: category, code: code}, type: QueryTypes.SELECT});
+}
+
 exports.itemAdd = async (name, category, code, unit_weight, safe_weight, max_weight, image_url, division) => {
     return await sequelize.query('insert into item (name, category, code, unit_weight, safe_weight, max_weight, image_url, division)\n' +
         'values(:name, :category, :code, :unit_weight, :safe_weight, :max_weight, :image_url, :division)',
         {replacements: { name: name, category: category, code: code, unit_weight: unit_weight, safe_weight: safe_weight, max_weight: max_weight, image_url: image_url, division: division}, type: QueryTypes.INSERT});
+}
+
+exports.itemUpdate = async (name, category, code, unit_weight, safe_weight, max_weight, image_url, description, pre_name, pre_category, pre_code) => {
+
+    const a = 1;
+    return await sequelize.query('update item set name = :name, category= :category, code = :code, unit_weight= :unit_weight, safe_weight= :safe_weight, max_weight= :max_weight, image_url= :image_url, description= :description where name = :pre_name and code= :pre_code and category = :pre_category',
+        {replacements: { name: name, category: category, code: code, unit_weight: unit_weight, safe_weight: safe_weight, max_weight: max_weight, image_url: image_url, description:description, pre_name:pre_name, pre_category:pre_category, pre_code: pre_code}, type: QueryTypes.UPDATE});
+}
+
+exports.itemDelete = async (pre_name, pre_category, pre_code) => {
+    return await sequelize.query('delete from item where name = :pre_name and code= :pre_code and category = :pre_category',
+        {replacements: { pre_name: pre_name, pre_category: pre_category, pre_code: pre_code}, type: QueryTypes.DELETE});
 }
 
 exports.deviceGetAll = async (uid) => {
@@ -92,7 +109,7 @@ exports.deviceUpdateData = async (uid, device_num) => {
     const data3 = await sequelize.query('select container.id as container_id, name as container_list from container left join user u on container.user_id = u.id where u.id = :uid',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
     const container_list = {"container_list": data3};
-    const data4 = await sequelize.query('select branch_name, layer_name, warehouse_name from location as l left join user u on l.user_id = u.id where u.id = :uid order by branch_name',
+    const data4 = await sequelize.query('select id as location_id, branch_name, layer_name, warehouse_name from location as l left join user u on l.user_id = u.id where u.id = :uid order by branch_name',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
     const where = {"branches": data4};
     return Object.assign(item_list, container_name, container_list, where);

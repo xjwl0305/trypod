@@ -3,7 +3,10 @@ var router = express.Router();
 const managementController = require("../Controller/management");
 
 router.get('/itemGetAll', managementController.itemGetAll);
+router.get('/itemGetDetail', managementController.itemGetDetail);
 router.get('/itemAdd', managementController.itemAdd);
+router.get('/itemUpdate', managementController.itemUpdate);
+router.get('/itemDelete', managementController.itemDelete);
 router.get('/deviceGetAll', managementController.deviceGetAll);
 router.get('/deviceGetBranch', managementController.deviceGetBranch);
 router.get('/deviceGetLayer', managementController.deviceGetLayer);
