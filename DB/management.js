@@ -112,7 +112,10 @@ exports.deviceUpdateData = async (uid, device_num) => {
     const data4 = await sequelize.query('select l.id as location_id, branch_name, layer_name, warehouse_name from location as l left join user u on l.user_id = u.id where u.id = :uid order by branch_name',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
     const where = {"branches": data4};
-    return Object.assign(item_list, container_name, container_list, where);
+    const data5 = await sequelize.query('select device_number, item_id, location_id, container_id from earlivery_device where device_number = :device_num',
+        {replacements: { uid: uid , device_num: device_num}, type: QueryTypes.SELECT});
+    const pre_data = {"pre_data": data5};
+    return Object.assign(item_list, container_name, container_list, where, pre_data);
 }
 
 exports.deviceUpdateApply = async (uid, item_id, location_id, container_id, order_weight, description, device_num) => {
