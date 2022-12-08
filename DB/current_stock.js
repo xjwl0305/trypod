@@ -215,12 +215,12 @@ exports.ReportSetting = async (uid, account) => {
             {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
     }
     let options = {
-        uri: 'http://3.34.196.3:8000/sched',
+        uri: 'http://localhost:8000/sched',
         method: 'GET',
         body:{
             start_time: '1999-01-01_06:06:06',
             writing_cycle:8,
-            id: account,
+            account: account,
             uid: uid
         },
         json:true
