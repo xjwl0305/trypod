@@ -8,7 +8,7 @@ exports.itemGetAll = async (id) => {
 }
 
 exports.itemGetDetail = async (name, category, code) => {
-    return await sequelize.query('select item.name, category, item.code, unit_weight, safe_weight, max_weight, image_url, description from item where item.name =:name and code=:code and category = :category',
+    return await sequelize.query('select item.name, category, item.code, unit_weight, safe_weight, max_weight, image_url, item.created_at as registry_date, description from item where item.name =:name and code=:code and category = :category',
         {replacements: { name: name, category: category, code: code}, type: QueryTypes.SELECT});
 }
 
