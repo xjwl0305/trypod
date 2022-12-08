@@ -4,7 +4,7 @@ const {QueryTypes} = require("sequelize");
 const Excel = require('exceljs');
 const moment = require('moment');
 const schedule = require('node-schedule');
-
+const request = require('request');
 
 // 아이템 재고 현황
 exports.itemGetAll = async (uid) => {
@@ -192,31 +192,64 @@ exports.deviceStockChange = async (device_num) => {
         {replacements: { device_num: device_num }, type: QueryTypes.SELECT});
 }
 
-exports.ReportSetting = async (uid) => {
-    let today = new Date();
+exports.ReportSetting = async (uid, account) => {
 
+    let today = new Date();
     if(today.getHours() < 5 && today.getHours() >= 0){
         const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:05:00:00")',
             {replacements: { uid: uid }, type: QueryTypes.INSERT});
         const get_id = await sequelize.query('select last_insert_id() as last');
-        return await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
+        const a = await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
             {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
     }else if(today.getHours() < 13 && today.getHours() >= 5){
         const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:13:00:00")',
             {replacements: { uid: uid }, type: QueryTypes.INSERT});
         const get_id = await sequelize.query('select last_insert_id() as last');
-        return await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
+        const a = await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
             {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
     }else{
         const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:21:00:00")',
             {replacements: { uid: uid }, type: QueryTypes.INSERT});
         const get_id = await sequelize.query('select last_insert_id() as last');
-        return await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
+        const a = await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
             {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
     }
+    let options = {
+        uri: 'http://3.34.196.3:8000/sched',
+        method: 'GET',
+        body:{
+            start_time: '1999-01-01_06:06:06',
+            writing_cycle:8,
+            id: account,
+            uid: uid
+        },
+        json:true
+    };
+    request.get(options, function (error, response, body) {
+        const a = 1
+        return body
+        //callback
+    });
+
 }
 
-exports.ReportTimeSetting = async (uid, base_time, report_writing_cycle ) => {
-    return await sequelize.query('update summary_option left join user u on summary_option.id = u.summary_option_id set base_time = :base_time, report_writing_cycle = :report_writing_cycle where u.id = :uid',
+exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle ) => {
+    const data =  await sequelize.query('update summary_option left join user u on summary_option.id = u.summary_option_id set base_time = :base_time, report_writing_cycle = :report_writing_cycle where u.id = :uid',
         {replacements: { uid: uid , base_time: base_time, report_writing_cycle: report_writing_cycle}, type: QueryTypes.UPDATE});
+    let options = {
+        uri: 'http://3.34.196.3:8000/sched_change',
+        method: 'GET',
+        body:{
+            start_time: '1999-01-01_06:06:06',
+            writing_cycle:report_writing_cycle,
+            id: account,
+            uid: uid
+        },
+        json:true
+    };
+    request.get(options, function (error, response, body) {
+        const a = 1
+        return body
+        //callback
+    });
 }
