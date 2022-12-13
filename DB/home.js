@@ -34,7 +34,8 @@ exports.CheckStock = async (uid) => {
 
 
 exports.CheckDevice = async (uid) => {
-    return await sequelize.query('select B.device_number, i.name, weight, A.created_at from device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id where (data_interval < TIMESTAMPDIFF(MINUTE, A.created_at, current_timestamp) and u.id = :uid)',
+    return await sequelize.query('select B.device_number, i.name, weight, A.updated_at from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
+        '                                                     where (data_interval < TIMESTAMPDIFF(MINUTE, A.updated_at, current_timestamp) and u.id = :uid and t2.max_date = A.created_at and t2.earlivery_device_id = A.earlivery_device_id)',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }
 
@@ -55,8 +56,22 @@ exports.getStockChange = async (uid) => {
 }
 
 exports.CheckWarehouse = async (uid) => {
-    return await sequelize.query('select l.warehouse_name, temperature, humidity, A.created_at from warehouse_raw_data as A left join location l on A.location_id = l.id left join user u on l.user_id = u.id where A.temperature < l.min_temp or A.temperature > l.max_temp or A.humidity < l.min_hum or A.humidity > l.max_hum and u.id = :uid',
+    const result = await sequelize.query('select l.branch_name, l.warehouse_name , l.max_temp, l.min_temp, l.max_hum, l.min_hum, A.temperature, A.humidity, A.created_at from (select location_id, id, max(warehouse_raw_data.created_at) as max_date from warehouse_raw_data group by location_id) as t2, warehouse_raw_data as A left join location l on A.location_id = l.id left join user u on l.user_id = u.id\n' +
+        'where u.id = :uid and t2.max_date = A.created_at',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
+    var arrPointHistory = [];
+    result.forEach(function (item, index, array) {
+        if(item.temperature > item.max_temp || item.temperature < item.min_temp || item.humidity > item.max_hum || item.humidity < item.min_hum){
+            var memberData = {};
+            memberData.branch_name = item.branch_name;
+            memberData.warehouse_name = item.warehouse_name;
+            memberData.temperature = item.temperature;
+            memberData.humidity = item.humidity;
+            memberData.created_at = item.created_at;
+            arrPointHistory.push(memberData);
+        }
+    });
+    return arrPointHistory;
 }
 
 
