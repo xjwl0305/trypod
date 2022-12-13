@@ -34,7 +34,7 @@ exports.CheckStock = async (uid) => {
 
 
 exports.CheckDevice = async (uid) => {
-    return await sequelize.query('select B.device_number, i.name, weight, A.updated_at from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
+    return await sequelize.query('select B.device_number, i.name, weight, A.created_at from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, device_raw_data as A left join earlivery_device B on A.earlivery_device_id = B.id left join item i on B.item_id = i.id left join location l on B.location_id = l.id left join user u on l.user_id = u.id\n' +
         '                                                     where (data_interval < TIMESTAMPDIFF(MINUTE, A.updated_at, current_timestamp) and u.id = :uid and t2.max_date = A.created_at and t2.earlivery_device_id = A.earlivery_device_id)',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }
