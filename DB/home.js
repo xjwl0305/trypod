@@ -4,38 +4,31 @@ const { sequelize } = require('../models/index')
 
 
 exports.findWeight = async (uid) => {
-    const [result, metadata] = await sequelize.query('select sum(weight) from device_raw_data as A left join earlivery_device as B on A.earlivery_device_id = B.id left join location as C on B.location_id = C.id left join user as D on C.user_id = D.id where D.id = :uid',
+    const [result, metadata] = await sequelize.query('select sum(weight) from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, device_raw_data as A left join earlivery_device as B on A.earlivery_device_id = B.id left join location as C on B.location_id = C.id left join user as D on C.user_id = D.id\n' +
+        'where D.id = 1 and t2.max_date = A.created_at and t2.earlivery_device_id = A.earlivery_device_id',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
     return result
 }
 
 exports.CheckStock = async (uid) => {
-    const result = await sequelize.query('select safe_weight, B.id , A.unit_weight as unit_weight , A.name as name, B.device_number as device_number from item as A left join earlivery_device as B on A.id = B.item_id left join location as C on B.location_id = C.id left join user as D on D.id = C.user_id where D.id = :uid',
+    const result = await sequelize.query('select device_number, i.code, i.name, i.safe_weight, sum(drd.weight) as sum_weight, drd.created_at from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, device_raw_data drd left join earlivery_device ed on ed.id = drd.earlivery_device_id left join item i on i.id = ed.item_id left join location l on l.id = ed.location_id left join user u on u.id = l.user_id\n' +
+        'where u.id = :uid and t2.max_date = drd.created_at and t2.earlivery_device_id = drd.earlivery_device_id group by code',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
-    const result2 = await sequelize.query('select earlivery_device_id , created_at, sum(weight) as sum_weight from device_raw_data group by earlivery_device_id',
-        {type: QueryTypes.SELECT});
     let Out_stock = 0;
     var arrPointHistory = [];
     var total = {};
     result.forEach(function (item, index, array) {
-        result2.forEach(function (item2, index, array) {
-            if(item.id === item2.earlivery_device_id){
-                if(item.safe_weight > item2.sum_weight){
-                    const mok = (item.safe_weight - item2.sum_weight)/item.unit_weight;
-                    Out_stock = Out_stock + mok;
-                    var memberData = {};
-                    memberData.device_number = item.device_number;
-                    memberData.name = item.name;
-                    memberData.current_weight = item2.sum_weight;
-                    memberData.latest_date = item2.created_at;
-                    arrPointHistory.push(memberData);
-                }
-            }
-        });
+        if(item.safe_weight > item.sum_weight){
+                var memberData = {};
+                memberData.device_number = item.device_number;
+                memberData.name = item.name;
+                memberData.current_weight = item.sum_weight;
+                memberData.latest_date = item.created_at;
+                arrPointHistory.push(memberData);
+        }
     });
-    total.count = Out_stock;
+    total.count = arrPointHistory.length;
     total.list = arrPointHistory;
-    console.log(total);
     return total;
 }
 
