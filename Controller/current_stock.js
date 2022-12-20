@@ -147,6 +147,16 @@ exports.itemUsage = (req, res) => {
             })
     );
 }
+exports.itemDataInfo = (req, res) => {
+    const uid = req.query.uid;
+    const item_name = req.query.item_name;
+    curStockDB.itemDataInfo(uid, item_name).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
 
 exports.deviceUsage = (req, res) => {
     const uid = req.query.uid;

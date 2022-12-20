@@ -8,6 +8,7 @@ router.get('/itemGetLayer', curStockController.itemGetLayer);
 router.get('/itemGetHouse', curStockController.itemGetHouse);
 router.get('/itemGetDetail', curStockController.itemGetDetail);
 router.post('/itemStockChange', curStockController.itemStockChange);
+router.get('/itemDataInfo', curStockController.itemDataInfo);
 router.get('/deviceGetAll', curStockController.deviceGetAll);
 router.get('/deviceGetBranch', curStockController.deviceGetBranch);
 router.get('/deviceGetLayer', curStockController.deviceGetLayer);

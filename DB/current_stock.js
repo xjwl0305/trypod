@@ -61,17 +61,17 @@ exports.itemGetHouse = async (uid, branch_name, layer_name, warehouse_name) => {
 
 exports.itemGetDetail = async (code) => {
     // 연동 디바이스
-    const connect_devices = await sequelize.query('select device_number, i.name, drd.weight, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
+    const connect_devices = await sequelize.query('select distinct device_number, i.name, drd.weight, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
         'where i.code = :code and t2.max_date = drd.created_at',
         {replacements: { code: code}, type: QueryTypes.SELECT});
     // 최근 재고량
     const current_stock = await sequelize.query('select sum(drd.weight) as current_stock from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
         'where i.code = :code and t2.max_date = drd.created_at',
         {replacements: { code: code}, type: QueryTypes.SELECT});
-    const connect_device = {"connect_devices": connect_devices}
+    const connect_device = {"connect_devices": connect_devices};
     const current_stock2 = {"current_stock": current_stock};
     // 디바이스 상태 이상
-    const device_status = await sequelize.query('select device_number, drd.data_interval, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
+    const device_status = await sequelize.query('select distinct device_number, drd.data_interval, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
         'where i.code = :code and t2.max_date = drd.created_at',
         {replacements: { code: code}, type: QueryTypes.SELECT});
     let today = new Date();
@@ -94,12 +94,17 @@ exports.itemGetDetail = async (code) => {
 
     return Object.assign(connect_device, current_stock2, current_usings, device_status2);
 }
-// 재고량 변화
+// 아이템 재고량 변화
 exports.itemStockChange = async (code) => {
     return await sequelize.query('select device_number, weight, device_raw_data.created_at from device_raw_data left join earlivery_device ed on device_raw_data.earlivery_device_id = ed.id left join item i on ed.item_id = i.id where i.code = :code',
         {replacements: { code: code }, type: QueryTypes.SELECT});
 }
-
+// 아이템 데이터 내역
+exports.itemDataInfo = async (uid, item_name) => {
+    return await sequelize.query('select summary_content.created_at, item_name, sum(weight) as weight, connection, GROUP_CONCAT(distinct device_number order by device_number SEPARATOR \',\') as device_numbers from summary_content left join summary s on s.id = summary_content.summary_id left join user u on u.id = s.user_id\n' +
+        'where u.id = :uid and item_name = :item_name group by s.created_at',
+        {replacements: { uid: uid, item_name: item_name }, type: QueryTypes.SELECT});
+}
 
 // 디바이스 재고 현황
 exports.deviceGetAll = async (uid) => {
