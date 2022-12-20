@@ -17,4 +17,6 @@ router.post('/deviceStockChange', curStockController.deviceStockChange);
 router.post('/reportDownload', curStockController.reportDownload);
 router.get('/reportSetting', curStockController.ReportSetting);
 router.get('/reportTimeSetting', curStockController.ReportTimeSetting);
+router.post('/itemUsage', curStockController.itemUsage);
+router.post('/deviceUsage', curStockController.deviceUsage);
 module.exports = router;

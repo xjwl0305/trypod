@@ -57,7 +57,7 @@ exports.getStockChange = async (uid) => {
 
 exports.CheckWarehouse = async (uid) => {
     const result = await sequelize.query('select l.branch_name, l.warehouse_name , l.max_temp, l.min_temp, l.max_hum, l.min_hum, A.temperature, A.humidity, A.created_at from (select location_id, id, max(warehouse_raw_data.created_at) as max_date from warehouse_raw_data group by location_id) as t2, warehouse_raw_data as A left join location l on A.location_id = l.id left join user u on l.user_id = u.id\n' +
-        'where u.id = :uid and t2.max_date = A.created_at',
+        'where u.id = :uid and t2.max_date = A.created_at and warehouse_name is not null',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
     var arrPointHistory = [];
     result.forEach(function (item, index, array) {

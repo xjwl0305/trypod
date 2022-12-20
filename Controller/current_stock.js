@@ -136,6 +136,30 @@ exports.deviceStockChange = (req, res) => {
             })
     );
 }
+exports.itemUsage = (req, res) => {
+    const code = req.query.code;
+    const date_form = req.query.date_form;
+    const type = req.query.type;
+    curStockDB.itemUsage(code, date_form, type).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
+
+exports.deviceUsage = (req, res) => {
+    const uid = req.query.uid;
+    const device_num = req.query.device_num;
+    const date_form = req.query.date_form;
+    const type = req.query.type;
+    curStockDB.deviceUsage(uid, device_num, date_form, type).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
+}
 
 exports.reportDownload = async (req, res) => {
     const uid = req.query.uid;
