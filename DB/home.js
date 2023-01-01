@@ -40,7 +40,7 @@ exports.CheckDevice = async (uid) => {
 }
 
 exports.ItemStock = async (uid) => {
-    return await sequelize.query('select A.created_at, name, unit_weight, GROUP_CONCAT(B.device_number order by B.device_number SEPARATOR \',\') as device_numbers from item as A left join earlivery_device as B on A.id = B.item_id left join location as C on B.location_id = C.id left join user as D on D.id = C.user_id where D.id = :uid group by unit_weight',
+    return await sequelize.query('select A.created_at, name, unit_weight, GROUP_CONCAT(B.device_number order by B.device_number SEPARATOR \',\') as device_numbers from item as A left join earlivery_device as B on A.id = B.item_id left join location as C on B.location_id = C.id left join user as D on D.id = C.user_id where D.id = :uid group by name',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }
 
