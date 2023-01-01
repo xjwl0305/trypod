@@ -108,7 +108,7 @@ exports.itemDataInfo = async (uid, item_name) => {
 
 // 디바이스 재고 현황
 exports.deviceGetAll = async (uid) => {
-    const data = await sequelize.query('select earlivery_device.device_number, i.name, drd.weight, drd.weight, drd.created_at from (select device_number, max(device_raw_data.created_at) as max_date from device_raw_data left join earlivery_device ed on device_raw_data.earlivery_device_id = ed.id group by device_number) as t2, earlivery_device left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id left join item i on earlivery_device.item_id = i.id left join location l on earlivery_device.location_id = l.id left join user u on l.user_id = u.id\n' +
+    const data = await sequelize.query('select earlivery_device.device_number, i.name, drd.weight, drd.battery, drd.created_at from (select device_number, max(device_raw_data.created_at) as max_date from device_raw_data left join earlivery_device ed on device_raw_data.earlivery_device_id = ed.id group by device_number) as t2, earlivery_device left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id left join item i on earlivery_device.item_id = i.id left join location l on earlivery_device.location_id = l.id left join user u on l.user_id = u.id\n' +
         'where u.id = :uid and t2.max_date = drd.created_at and t2.device_number = earlivery_device.device_number order by drd.id',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
     const branch_list = await sequelize.query('select distinct(branch_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name is not null',
@@ -123,7 +123,7 @@ exports.deviceGetAll = async (uid) => {
 }
 
 exports.deviceGetBranch = async (uid, branch_name) => {
-    const data = await sequelize.query('select earlivery_device.device_number, i.name, drd.weight, drd.weight, drd.created_at from (select device_number, max(device_raw_data.created_at) as max_date from device_raw_data left join earlivery_device ed on device_raw_data.earlivery_device_id = ed.id group by device_number) as t2, earlivery_device left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id left join item i on earlivery_device.item_id = i.id left join location l on earlivery_device.location_id = l.id left join user u on l.user_id = u.id\n' +
+    const data = await sequelize.query('select earlivery_device.device_number, i.name, drd.weight, drd.battery, drd.created_at from (select device_number, max(device_raw_data.created_at) as max_date from device_raw_data left join earlivery_device ed on device_raw_data.earlivery_device_id = ed.id group by device_number) as t2, earlivery_device left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id left join item i on earlivery_device.item_id = i.id left join location l on earlivery_device.location_id = l.id left join user u on l.user_id = u.id\n' +
         'where u.id = :uid and branch_name = :branch_name and t2.max_date = drd.created_at and t2.device_number = earlivery_device.device_number order by drd.id',
         {replacements: { uid: uid , branch_name: branch_name}, type: QueryTypes.SELECT});
     const layer_list = await sequelize.query('select distinct (layer_name) from location left join user u on location.user_id = u.id where u.id = :uid and branch_name = :branch_name and layer_name is not null',
