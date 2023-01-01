@@ -103,7 +103,7 @@ exports.deviceUpdateData = async (uid, device_num) => {
     const data = await sequelize.query('select distinct A.id as item_id, A.name as item_name from item as A left join earlivery_device ed on A.id = ed.item_id left join container c on c.id = ed.container_id = c.id left join device_raw_data drd on ed.id = drd.earlivery_device_id left join location l on ed.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
     const item_list = {"item_list": data};
-    const data2 = await sequelize.query('select c.name as conatiner_name from item as A left join earlivery_device ed on A.id = ed.item_id left join container c on c.id = ed.container_id = c.id left join location l on ed.location_id = l.id left join user u on l.user_id = u.id where u.id = 1 and ed.device_number = :device_num',
+    const data2 = await sequelize.query('select c.name as conatiner_name from item as A left join earlivery_device ed on A.id = ed.item_id left join container c on c.id = ed.container_id = c.id left join location l on ed.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid and ed.device_number = :device_num',
         {replacements: { uid: uid , device_num: device_num}, type: QueryTypes.SELECT});
     const container_name = {"container_name": data2};
     const data3 = await sequelize.query('select container.id as container_id, name as container_list from container left join user u on container.user_id = u.id where u.id = :uid',

@@ -5,7 +5,7 @@ const { sequelize } = require('../models/index')
 
 exports.findWeight = async (uid) => {
     const [result, metadata] = await sequelize.query('select sum(weight) from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, device_raw_data as A left join earlivery_device as B on A.earlivery_device_id = B.id left join location as C on B.location_id = C.id left join user as D on C.user_id = D.id\n' +
-        'where D.id = 1 and t2.max_date = A.created_at and t2.earlivery_device_id = A.earlivery_device_id',
+        'where D.id = :uid and t2.max_date = A.created_at and t2.earlivery_device_id = A.earlivery_device_id',
         {replacements: { uid: uid }, type: QueryTypes.SELECT});
     return result
 }
@@ -46,12 +46,13 @@ exports.ItemStock = async (uid) => {
 
 exports.getWarehouse = async (uid) => {
     const a = 1
-    return await sequelize.query('select A.id, A.temperature, A.humidity, l.min_temp, l.max_temp, l.min_hum, l.max_hum  from warehouse_raw_data as A left join location l on A.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid',
+    return await sequelize.query('select l.warehouse_name, A.temperature, A.humidity, l.min_temp, l.max_temp, l.min_hum, l.max_hum, A.created_at from (select location_id, max(warehouse_raw_data.created_at) as max_date from warehouse_raw_data group by location_id) as t2, warehouse_raw_data as A left join location l on A.location_id = l.id left join user u on l.user_id = u.id\n' +
+        'where u.id = :uid and t2.max_date = A.created_at and t2.location_id = l.id and warehouse_name is not null',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }
 
 exports.getStockChange = async (uid) => {
-    return await sequelize.query('select device_number, d.weight ,earlivery_device.created_at from earlivery_device left join device_raw_data d on earlivery_device.id = d.earlivery_device_id left join location l on earlivery_device.location_id = l.id left join user u on l.user_id = u.id where u.id = 1 order by earlivery_device.created_at',
+    return await sequelize.query('select device_number, d.weight ,earlivery_device.created_at from earlivery_device left join device_raw_data d on earlivery_device.id = d.earlivery_device_id left join location l on earlivery_device.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid order by earlivery_device.created_at',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }
 
