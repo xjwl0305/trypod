@@ -149,7 +149,7 @@ exports.warehouseList = async (uid, branch_name, layer_name) => {
 }
 
 exports.warehouseInfo = async (uid, layer_name, warehouse_name) => {
-    return await sequelize.query('select w.temperature, w.humidity, w.created_at from warehouse_raw_data w left join location l on w.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid and layer_name = :layer_name and warehouse_name = :warehouse_name;',
+    return await sequelize.query('select w.temperature, w.humidity, w.created_at from warehouse_raw_data w left join location l on w.location_id = l.id left join user u on l.user_id = u.id where u.id = :uid and layer_name = :layer_name and warehouse_name = :warehouse_name',
         {replacements: {uid: uid, layer_name: layer_name, warehouse_name: warehouse_name}, type: QueryTypes.SELECT});
 }
 
