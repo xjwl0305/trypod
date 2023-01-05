@@ -86,7 +86,7 @@ exports.loginAPI = (req, res) => {
                     },
                     secret,
                     {
-                        expiresIn: '7d'
+                        expiresIn: '60m'
                     }, (err, token) => {
                         if (err) reject(err)
                         resolve(token)
