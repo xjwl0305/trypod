@@ -31,8 +31,9 @@ exports.itemAdd = (req, res) => {
     const max_weight = req.query.max_weight;
     const image_url = req.query.image_url;
     const division = req.query.division;
+    const description = req.query.description;
 
-    managementDB.itemAdd(name, category, code, unit_weight, safe_weight, max_weight, image_url, division).then(result =>
+    managementDB.itemAdd(name, category, code, unit_weight, safe_weight, max_weight, image_url, division, description).then(result =>
         res.status(200).json(
             {
                 result

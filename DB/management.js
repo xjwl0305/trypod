@@ -12,10 +12,10 @@ exports.itemGetDetail = async (name, category, code) => {
         {replacements: { name: name, category: category, code: code}, type: QueryTypes.SELECT});
 }
 
-exports.itemAdd = async (name, category, code, unit_weight, safe_weight, max_weight, image_url, division) => {
-    return await sequelize.query('insert into item (name, category, code, unit_weight, safe_weight, max_weight, image_url, division)\n' +
-        'values(:name, :category, :code, :unit_weight, :safe_weight, :max_weight, :image_url, :division)',
-        {replacements: { name: name, category: category, code: code, unit_weight: unit_weight, safe_weight: safe_weight, max_weight: max_weight, image_url: image_url, division: division}, type: QueryTypes.INSERT});
+exports.itemAdd = async (name, category, code, unit_weight, safe_weight, max_weight, image_url, division, description) => {
+    return await sequelize.query('insert into item (name, category, code, unit_weight, safe_weight, max_weight, image_url, division, description)\n' +
+        'values(:name, :category, :code, :unit_weight, :safe_weight, :max_weight, :image_url, :division, :description)',
+        {replacements: { name: name, category: category, code: code, unit_weight: unit_weight, safe_weight: safe_weight, max_weight: max_weight, image_url: image_url, division: division, description:description}, type: QueryTypes.INSERT});
 }
 
 exports.itemUpdate = async (name, category, code, unit_weight, safe_weight, max_weight, image_url, description, pre_name, pre_category, pre_code) => {

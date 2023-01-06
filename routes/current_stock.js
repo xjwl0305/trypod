@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const curStockController = require("../Controller/current_stock");
+const authMiddleware = require('../middlewares/auth');
 
+router.use('/', authMiddleware);
 router.get('/itemGetAll', curStockController.itemGetAll);
 router.get('/itemGetBranch', curStockController.itemGetBranch);
 router.get('/itemGetLayer', curStockController.itemGetLayer);
@@ -20,4 +22,5 @@ router.get('/reportSetting', curStockController.ReportSetting);
 router.get('/reportTimeSetting', curStockController.ReportTimeSetting);
 router.post('/itemUsage', curStockController.itemUsage);
 router.post('/deviceUsage', curStockController.deviceUsage);
+
 module.exports = router;

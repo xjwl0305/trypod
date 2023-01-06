@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 const itemController = require("../Controller/item");
-
 // router.post('/register', userController.registerAPI);
 // router.get('/all', userController.getAPI);
 // router.post('/checkphone', userController.phone_duplicateAPI);

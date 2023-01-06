@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const managementController = require("../Controller/management");
+const authMiddleware = require('../middlewares/auth');
 
+router.use('/', authMiddleware);
 router.get('/itemGetAll', managementController.itemGetAll);
 router.get('/itemGetDetail', managementController.itemGetDetail);
 router.get('/itemAdd', managementController.itemAdd);
