@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const userController = require("../Controller/auth");
+const curStockController = require("../Controller/current_stock");
 
 router.post('/register', userController.registerAPI);
 router.get('/all', userController.getAPI);
@@ -12,5 +13,6 @@ router.post('/password', userController.changePWAPI);
 router.get('/sendMail', userController.SendMail);
 router.get('/checkEmail', userController.checkMailCode);
 router.get('/ChecksendEmail', userController.CheckSendMail);
+router.get('/reportSetting', userController.ReportSetting);
 
 module.exports = router;

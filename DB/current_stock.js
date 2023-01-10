@@ -323,46 +323,6 @@ var weekNumOfMonth = function(date){
     return [WEEK_KOR[weekNum], (date.getMonth()+1)+'월'];
 }
 
-exports.ReportSetting = async (uid, account) => {
-
-    let today = new Date();
-    if(today.getHours() < 5 && today.getHours() >= 0){
-        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:05:00:00")',
-            {replacements: { uid: uid }, type: QueryTypes.INSERT});
-        const get_id = await sequelize.query('select last_insert_id() as last');
-        const a = await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
-            {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
-    }else if(today.getHours() < 13 && today.getHours() >= 5){
-        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:13:00:00")',
-            {replacements: { uid: uid }, type: QueryTypes.INSERT});
-        const get_id = await sequelize.query('select last_insert_id() as last');
-        const a = await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
-            {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
-    }else{
-        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:21:00:00")',
-            {replacements: { uid: uid }, type: QueryTypes.INSERT});
-        const get_id = await sequelize.query('select last_insert_id() as last');
-        const a = await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
-            {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
-    }
-    let options = {
-        uri: 'http://localhost:8000/sched',
-        method: 'GET',
-        body:{
-            start_time: '1999-01-01_06:06:06',
-            writing_cycle:8,
-            account: account,
-            uid: uid
-        },
-        json:true
-    };
-    request.get(options, function (error, response, body) {
-        const a = 1
-        return body
-        //callback
-    });
-
-}
 
 exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle ) => {
     const data =  await sequelize.query('update summary_option left join user u on summary_option.id = u.summary_option_id set base_time = :base_time, report_writing_cycle = :report_writing_cycle where u.id = :uid',

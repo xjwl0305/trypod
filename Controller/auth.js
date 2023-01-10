@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const config = require('../config')
 const authDB = require('../DB/auth')
 const {sendMail} = require("../DB/auth");
+const curStockDB = require("../DB/current_stock");
 
 exports.registerAPI = (req, res) => {
     const {id, password} = req.query
@@ -89,17 +90,18 @@ exports.loginAPI = (req, res) => {
                         expiresIn: '60m'
                     }, (err, token) => {
                         if (err) reject(err)
-                        resolve(token)
+                        resolve([token, user.id])
                     })
             })
         }
     }
 
-    const respond = (token) => {
+    const respond = (user_data) => {
         res.status(200).json({
             message: 'logged in successfully',
             success: true,
-            token
+            token: user_data[0],
+            uid : user_data[1]
         })
     }
 
@@ -216,4 +218,15 @@ exports.checkMailCode = (req, res) => {
                     success: result
                 });
         });
+}
+
+exports.ReportSetting = (req, res) => {
+    const uid = req.query.uid;
+    const account = req.query.account;
+    curStockDB.ReportSetting(uid, account).then(result =>
+        res.status(200).json(
+            {
+                result
+            })
+    );
 }

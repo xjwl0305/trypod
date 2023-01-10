@@ -224,16 +224,7 @@ exports.reportDownload = async (req, res) => {
         // })
     }
 }
-exports.ReportSetting = (req, res) => {
-    const uid = req.query.uid;
-    const account = req.query.account;
-    curStockDB.ReportSetting(uid, account).then(result =>
-        res.status(200).json(
-            {
-                result
-            })
-    );
-}
+
 exports.ReportTimeSetting = (req, res) => {
     const uid = req.query.uid;
     const base_time = req.query.base_time;
