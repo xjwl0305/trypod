@@ -49,10 +49,14 @@ exports.ItemStock = async (uid) => {
         for (let step =0; step < device_array.length; step++){
             const data2 = await sequelize.query('select device_raw_data.created_at as created_at, device_raw_data.data_interval as data_interval from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data group by earlivery_device_id) as t2 ,device_raw_data left join earlivery_device ed on ed.id = device_raw_data.earlivery_device_id\n' +
                 '  where device_number = :device_number and device_raw_data.created_at = t2.max_date', {replacements: {device_number: device_array[step]}, type: QueryTypes.SELECT});
-            let date = new Date(data2[0].created_at);
-            date.setHours(date.getHours()+ data2[0].data_interval);
-            if (date < today) {
-                data[index].connection = 'warning'
+            try {
+                let date = new Date(data2[0].created_at);
+                date.setHours(date.getHours() + data2[0].data_interval);
+                if (date < today) {
+                    data[index].connection = 'warning'
+                    break;
+                }
+            } catch (e){
                 break;
             }
         }
