@@ -78,7 +78,7 @@ exports.itemGetDetail = async (code) => {
     const connect_error_device = [];
     device_status.forEach(function (item, index, array) {
         let date = new Date(item.created_at);
-        date.setMinutes(date.getMinutes()+ item.data_interval+5);
+        date.setHours(date.getHours()+ item.data_interval+5);
         if (date < today){
             connect_error_device.push(item.device_number);
         }
