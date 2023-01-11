@@ -40,8 +40,20 @@ exports.CheckDevice = async (uid) => {
 }
 
 exports.ItemStock = async (uid) => {
-    return await sequelize.query('select A.created_at, name, unit_weight, GROUP_CONCAT(B.device_number order by B.device_number SEPARATOR \',\') as device_numbers from item as A left join earlivery_device as B on A.id = B.item_id left join location as C on B.location_id = C.id left join user as D on D.id = C.user_id where D.id = :uid and A.created_at is not null group by name',
+    const data =  await sequelize.query('select A.created_at, name, unit_weight, GROUP_CONCAT(B.device_number order by B.device_number SEPARATOR \',\') as device_numbers from item as A left join earlivery_device as B on A.id = B.item_id left join location as C on B.location_id = C.id left join user as D on D.id = C.user_id where D.id = :uid and A.created_at is not null group by name limit 0,20',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
+    let date = new Date();
+    data.forEach(function (item, index, array){
+
+        const device_array = item.device_numbers.split(",");
+        device_array.forEach(function (item2, index, array) {
+            const data2 = sequelize.query('select device_raw_data.created_at from (select earlivery_device_id, max(device_raw_data.created_at) as max_date from device_raw_data group by earlivery_device_id) as t2 ,device_raw_data left join earlivery_device ed on ed.id = device_raw_data.earlivery_device_id\n' +
+                '                                                                     where device_number = :device_number and device_raw_data.created_at = t2.max_date', {replacements: {device_number: item2}, type: QueryTypes.SELECT})
+            const a = 1;
+
+        })
+    })
+    const a = 1;
 }
 
 exports.getWarehouse = async (uid) => {
