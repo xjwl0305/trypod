@@ -71,7 +71,7 @@ exports.itemGetDetail = async (code) => {
     const connect_device = {"connect_devices": connect_devices};
     const current_stock2 = {"current_stock": current_stock};
     // 디바이스 상태 이상
-    const device_status = await sequelize.query('select distinct device_number, drd.data_interval, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
+    const device_status = await sequelize.query('select distinct device_number, i.name, drd.weight, drd.created_at, drd.data_interval, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
         'where i.code = :code and t2.max_date = drd.created_at',
         {replacements: { code: code}, type: QueryTypes.SELECT});
     let today = new Date();
@@ -80,7 +80,11 @@ exports.itemGetDetail = async (code) => {
         let date = new Date(item.created_at);
         date.setHours(date.getHours()+ item.data_interval+5);
         if (date < today){
-            connect_error_device.push(item.device_number);
+            let strange = {"device_number": item.device_number,
+            "name": item.name,
+            "weight": item.weight,
+            "created_at": item.created_at}
+            connect_error_device.push(strange);
         }
     });
     const device_status2 = {"device_status": connect_error_device};
