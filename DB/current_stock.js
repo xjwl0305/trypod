@@ -70,7 +70,7 @@ exports.itemGetDetail = async (code) => {
         {replacements: { code: code}, type: QueryTypes.SELECT});
     let current_stock_total = 0;
     current_stock.forEach(function (item){
-        current_stock_total += Number(item);
+        current_stock_total += Number(item.current_stock);
     })
     const connect_device = {"connect_devices": connect_devices};
     const current_stock2 = {"current_stock": current_stock_total};
