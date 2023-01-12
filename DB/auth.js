@@ -128,13 +128,13 @@ exports.sendMail = (mail, res) => {
             secure: false,
             auth: {
                 user: "tripodlabofficial@gmail.com",
-                pass: "crsrkauyojqqkrke",
+                pass: "rnnlekcqhlrsxiuu",
             },
         });
         let mailOptions = transporter.sendMail({
             from: `트라이포드랩`,
             to: mail,
-            subject: '회원가입을 위한 인증번호를 입력해주세요.',
+            subject: '인증번호를 입력해주세요.',
             html: emailTemplete,
         });
         transporter.sendMail(mailOptions, function (error, info) {
@@ -177,13 +177,13 @@ exports.CheckSendMail = async (mail, res) => {
             secure: false,
             auth: {
                 user: "tripodlabofficial@gmail.com",
-                pass: "crsrkauyojqqkrke",
+                pass: "rnnlekcqhlrsxiuu",
             },
         });
         let mailOptions = transporter.sendMail({
             from: `트라이포드랩`,
             to: mail,
-            subject: '회원가입을 위한 인증번호를 입력해주세요.',
+            subject: '인증번호를 입력해주세요.',
             html: emailTemplete,
         });
         transporter.sendMail(mailOptions, function (error, info) {
