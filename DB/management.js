@@ -3,7 +3,7 @@ const {sequelize} = require("../models");
 const {QueryTypes} = require("sequelize");
 
 exports.itemGetAll = async (id) => {
-    return await sequelize.query('select name, category, code, max_weight, unit_weight from item where division = :id order by item.name',
+    return await sequelize.query('select name, category, code, max_weight, safe_weight from item where division = :id order by item.name',
         {replacements: {id: id}, type: QueryTypes.SELECT})
 }
 
