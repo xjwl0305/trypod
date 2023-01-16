@@ -4,7 +4,6 @@ const {QueryTypes} = require("sequelize");
 const Excel = require("exceljs");
 const cors = require("cors");
 const app = require("../app");
-app.use(cors());
 
 exports.itemGetAll = (req, res) => {
     const uid = req.query.uid
