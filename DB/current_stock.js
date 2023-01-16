@@ -97,8 +97,12 @@ exports.itemGetDetail = async (code) => {
     const current_using = await sequelize.query('select sum(drd.weight) data from (select earlivery_device_id, max(created_at) as max_date from device_raw_data where device_raw_data.created_at not in (select max(created_at) from device_raw_data group by earlivery_device_id) group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
         'where i.code = :code and t2.max_date = drd.created_at',
         {replacements: { code: code}, type: QueryTypes.SELECT});
-
-    const current_using_data = current_stock[0].current_stock - current_using[0].data
+    let current_using_data = 0;
+    try {
+        current_using_data = current_stock[0].current_stock - current_using[0].data
+    }catch (e){
+        current_using_data = 0;
+    }
     const current_usings = {"current_using": current_using_data}
 
     return Object.assign(connect_device, current_stock2, current_usings, device_status2);
