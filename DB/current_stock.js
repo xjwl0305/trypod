@@ -5,7 +5,9 @@ const Excel = require('exceljs');
 const moment = require('moment');
 const schedule = require('node-schedule');
 const request = require('request');
-
+const cors = require("cors");
+const app = require("../app");
+app.use(cors());
 // 아이템 재고 현황
 exports.itemGetAll = async (uid) => {
     const data = await sequelize.query('select distinct i.code, i.name, i.safe_weight, i.unit_weight, earlivery_device.device_number ,drd.data_interval, drd.weight, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data where device_raw_data.created_at not in (select max(created_at) from device_raw_data group by earlivery_device_id) group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +

@@ -2,10 +2,13 @@ const curStockDB = require("../DB/current_stock");
 const {sequelize} = require("../models");
 const {QueryTypes} = require("sequelize");
 const Excel = require("exceljs");
-
+const cors = require("cors");
+const app = require("../app");
+app.use(cors());
 
 exports.itemGetAll = (req, res) => {
     const uid = req.query.uid
+    res.header( "Access-Control-Allow-Origin" );
     curStockDB.itemGetAll(uid).then(result =>
         res.status(200).json(
             {
