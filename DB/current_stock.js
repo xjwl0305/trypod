@@ -206,7 +206,12 @@ exports.deviceGetDetail = async (device_num) => {
         'where earlivery_device.device_number = :device_num and t2.max_date = drd.created_at',
         {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
 
-    const current_using_data = current_stock[0].current_stock - current_using[0].data
+    let current_using_data = 0;
+    try {
+        current_using_data = current_stock[0].current_stock - current_using[0].data
+    }catch (e){
+        current_using_data = 0;
+    }
     const current_usings = {"current_using": current_using_data}
     const statement_data = {"statement": statement}
 
