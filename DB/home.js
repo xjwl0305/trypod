@@ -67,7 +67,7 @@ exports.ItemStock = async (uid) => {
 
 exports.getWarehouse = async (uid) => {
     const a = 1
-    return await sequelize.query('select l.warehouse_name, A.temperature, A.humidity, l.min_temp, l.max_temp, l.min_hum, l.max_hum, A.created_at from (select location_id, max(warehouse_raw_data.created_at) as max_date from warehouse_raw_data group by location_id) as t2, warehouse_raw_data as A left join location l on A.location_id = l.id left join user u on l.user_id = u.id\n' +
+    return await sequelize.query('select l.branch_name, l.layer_name, l.warehouse_name, A.temperature, A.humidity, l.min_temp, l.max_temp, l.min_hum, l.max_hum, A.created_at from (select location_id, max(warehouse_raw_data.created_at) as max_date from warehouse_raw_data group by location_id) as t2, warehouse_raw_data as A left join location l on A.location_id = l.id left join user u on l.user_id = u.id\n' +
         'where u.id = :uid and t2.max_date = A.created_at and t2.location_id = l.id and warehouse_name is not null',
         {replacements: {uid: uid}, type: QueryTypes.SELECT});
 }
