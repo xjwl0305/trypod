@@ -238,12 +238,12 @@ exports.reportDownload = async (req, res) => {
                 replacements: {uid: uid},
                 type: QueryTypes.SELECT
             });
-            var now = new Date();
-            let month = now.getMonth() + 1;
-            let day = now.getDate();
-            let hour = now.getHours();
-            let minute = now.getMinutes();
-            let second = now.getSeconds();
+            var now2 = new Date();
+            let month = now2.getMonth() + 1;
+            let day = now2.getDate();
+            let hour = now2.getHours();
+            let minute = now2.getMinutes();
+            let second = now2.getSeconds();
 
             month = month >= 10 ? month : '0' + month;
             day = day >= 10 ? day : '0' + day;
@@ -252,7 +252,7 @@ exports.reportDownload = async (req, res) => {
             second = second >= 10 ? second : '0' + second;
             res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             res.setHeader("Content-Disposition", "attachment; filename=" +
-                company[0].company_name+now.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second +"아이템별 재고리스트" +".xlsx");
+                company[0].company_name+now2.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second +"아이템별 재고리스트" +".xlsx");
 
             await ItemReport.xlsx.write(res)
         }else{
