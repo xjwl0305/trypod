@@ -179,7 +179,7 @@ exports.warehouseAdd = async (uid, branch_name, branch_address, branch_detailed_
 exports.branchUpdate = async (uid, branch_name, branch_address, manager_name, manager_phone, manager_email, pre_branch_name, pre_manager_name, pre_manager_phone) => {
     const a = await sequelize.query('update location l left join user u on l.user_id = u.id set branch_address = :branch_address, manager_name = :manager_name, manager_phone = :manager_phone, manager_email = :manager_email\n' +
         'where u.id = :uid and branch_name = :pre_branch_name and manager_name = :pre_manager_name and manager_phone = :pre_manager_phone and layer_name is null',
-        {replacements: {uid: uid, branch_name: branch_name, manager_name: manager_name, manager_phone: manager_phone, manager_email: manager_email, pre_branch_name: pre_branch_name,
+        {replacements: {uid: uid, branch_name: branch_name, manager_name: manager_name, branch_address: branch_address, manager_phone: manager_phone, manager_email: manager_email, pre_branch_name: pre_branch_name,
             pre_manager_name: pre_manager_name, pre_manager_phone: pre_manager_phone}, type: QueryTypes.UPDATE});
     return await sequelize.query('update location l left join user u on l.user_id = u.id set branch_name = :branch_name\n' +
         'where u.id = :uid and branch_name = :pre_branch_name',
