@@ -202,8 +202,8 @@ exports.deviceGetDetail = async (device_num) => {
         {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
 
     // 데이터 내역
-    const statement = await sequelize.query('select sum(drd.weight) as data from (select earlivery_device_id, max(created_at) as max_date from device_raw_data where device_raw_data.created_at not in (select max(created_at) from device_raw_data group by earlivery_device_id) group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
-        'where earlivery_device.device_number = :device_num and t2.max_date = drd.created_at',
+    const statement = await sequelize.query('select earlivery_device_id as device_number, i.name, weight, battery, device_raw_data.created_at from device_raw_data left join earlivery_device ed on device_raw_data.earlivery_device_id = ed.id left join item i on ed.item_id = i.id\n' +
+        '                                                                                         where earlivery_device_id = :device_num order by device_raw_data.created_at DESC limit 0,21',
         {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
 
     let current_using_data = 0;
