@@ -4,6 +4,7 @@ const {QueryTypes} = require("sequelize");
 const Excel = require("exceljs");
 const cors = require("cors");
 const app = require("../app");
+const URLEncoder = require("nodemailer/lib/qp");
 
 exports.itemGetAll = (req, res) => {
     const uid = req.query.uid
@@ -251,8 +252,9 @@ exports.reportDownload = async (req, res) => {
             minute = minute >= 10 ? minute : '0' + minute;
             second = second >= 10 ? second : '0' + second;
             res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            res.setHeader("Content-Disposition", "attachment; filename=" +
-                company[0].company_name+" "+now2.getFullYear().toString() + "-" + month.toString() + "-" + day.toString() + " " + hour.toString() + ":" + minute.toString() + ":" + second.toString() +"아이템별 재고리스트" +".xlsx");
+            res.setHeader("Content-Disposition", "attachment; filename=\"" +
+                URLEncoder.encode(company[0].company_name+" "+now2.getFullYear().toString() + "-" +
+                    month.toString() + "-" + day.toString() + "_" + hour.toString() + ":" + minute.toString() + ":" + second.toString() +"_아이템별 재고리스트" +".xlsx", "UTF-8")+"\";");
 
             await ItemReport.xlsx.write(res)
         }else{
