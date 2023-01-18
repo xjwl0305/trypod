@@ -201,6 +201,7 @@ exports.checkCode = (req) => {
     return new Promise(resolve => {
         const {code} = req.query;
         const hashAuth = req.cookies.hashAuth;
+        const mail = req.query.mail;
         try {
             if(code === hashAuth) {
                 const account = sequelize.query('select account as count from user where email = :mail',
