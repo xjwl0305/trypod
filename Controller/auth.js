@@ -222,7 +222,7 @@ exports.checkMailCode = (req, res) => {
 exports.ReportSetting = (req, res) => {
     const uid = req.query.uid;
     const account = req.query.account;
-    curStockDB.ReportSetting(uid, account).then(result =>
+    authDB.ReportSetting(uid, account).then(result =>
         res.status(200).json(
             {
                 result

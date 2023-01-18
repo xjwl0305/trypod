@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt');
 const cookie = require('cookie');
 const {sequelize} = require("../models");
 const request = require("request");
+const axios = require('axios');
 // const app = require('express')();
 // const bodyParser = require('body-parser');
 // const cookieParser = require('cookie-parser');
@@ -197,6 +198,7 @@ exports.CheckSendMail = async (mail, res) => {
         resolve(true);
     });
 }
+
 exports.checkCode = (req) => {
     return new Promise(async resolve => {
         const {code} = req.query;
@@ -245,21 +247,29 @@ exports.ReportSetting = async (uid, account) => {
         const a = await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
             {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
     }
-    let options = {
-        uri: 'http://localhost:8000/sched',
-        method: 'GET',
-        body:{
-            start_time: '1999-01-01_06:06:06',
+
+    axios({
+        method: "post",
+        url: `http://localhost:8000/sched`,
+        data:{
+            start_time: '2023-01-18_18:00:00',
             writing_cycle:8,
             account: account,
             uid: uid
         },
-        json:true
-    };
-    request.get(options, function (error, response, body) {
-        const a = 1
-        return body
-        //callback
-    });
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+        .then(function (res) {
+            console.log(res);
+            if (res.status === 200) {
+                return true;
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            return false;
+        });
 
 }
