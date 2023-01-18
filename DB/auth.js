@@ -198,13 +198,13 @@ exports.CheckSendMail = async (mail, res) => {
     });
 }
 exports.checkCode = (req) => {
-    return new Promise(resolve => {
+    return new Promise(async resolve => {
         const {code} = req.query;
         const hashAuth = req.cookies.hashAuth;
-        const mail = req.query.mail;
+        const {mail} = req.query;
         try {
-            if(code === hashAuth) {
-                const account = sequelize.query('select account as count from user where email = :mail',
+            if (code === hashAuth) {
+                const account = await sequelize.query('select account as count from user where email = :mail',
                     {replacements: {mail: mail}, type: QueryTypes.SELECT});
                 const result = {
                     message: 'auth complete',
@@ -212,11 +212,10 @@ exports.checkCode = (req) => {
                     account: account[0].account
                 }
                 resolve(result);
-            }
-            else {
+            } else {
                 resolve(false);
             }
-        } catch(err) {
+        } catch (err) {
             resolve(false);
             console.error(err);
         }
