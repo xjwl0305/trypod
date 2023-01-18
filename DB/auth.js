@@ -117,8 +117,9 @@ exports.sendMail = (mail, res) => {
             maxAge: 300000
         });
         ejs.renderFile('./public/template/authMail.ejs', {authCode : authNum}, function (err, data) {
-            if(err){resolve(false);
-                return false;}
+            if(err) {
+                return resolve(false);
+            }
             emailTemplete = data;
         });
         let transporter = nodemailer.createTransport({
@@ -128,7 +129,7 @@ exports.sendMail = (mail, res) => {
             secure: false,
             auth: {
                 user: "tripodlabofficial@gmail.com",
-                pass: "rnnlekcqhlrsxiuu",
+                pass: "czievzxlwxhtbgly",
             },
         });
         let mailOptions = transporter.sendMail({
@@ -139,12 +140,11 @@ exports.sendMail = (mail, res) => {
         });
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
-                resolve(false);
-                return false;
+                return resolve(false);
             }
-            resolve(true);
+            return resolve(true);
         })
-        resolve(true);
+        return resolve(true);
     });
 }
 
@@ -177,7 +177,7 @@ exports.CheckSendMail = async (mail, res) => {
             secure: false,
             auth: {
                 user: "tripodlabofficial@gmail.com",
-                pass: "rnnlekcqhlrsxiuu",
+                pass: "czievzxlwxhtbgly",
             },
         });
         let mailOptions = transporter.sendMail({
