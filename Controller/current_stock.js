@@ -252,7 +252,7 @@ exports.reportDownload = async (req, res) => {
             second = second >= 10 ? second : '0' + second;
             res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             res.setHeader("Content-Disposition", "attachment; filename=" +
-                company[0].company_name+now2.getFullYear() + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second +"아이템별 재고리스트" +".xlsx");
+                company[0].company_name+" "+now.getFullYear().toString() + "-" + month.toString() + "-" + day.toString() + " " + hour.toString() + ":" + minute.toString() + ":" + second.toString() +"아이템별 재고리스트" +".xlsx");
 
             await ItemReport.xlsx.write(res)
         }else{
