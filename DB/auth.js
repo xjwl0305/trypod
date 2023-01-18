@@ -248,20 +248,12 @@ exports.ReportSetting = async (uid, account) => {
             {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
     }
 
-    axios({
-        method: "post",
-        url: `http://localhost:8000/sched`,
-        data:{
-            start_time: '2023-01-18_18:00:00',
-            writing_cycle:8,
-            account: account,
-            uid: uid
-        },
-        headers: {
-            "Content-Type": "application/json",
-        },
-    })
-        .then(function (res) {
+    axios.post(`http://localhost:8000/sched`, {
+        start_time: '2023-01-18_18:00:00',
+        writing_cycle:8,
+        account: account,
+        uid: uid
+    }).then(function (res) {
             console.log(res);
             if (res.status === 200) {
                 return true;
