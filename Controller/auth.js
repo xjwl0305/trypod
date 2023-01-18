@@ -214,8 +214,7 @@ exports.checkMailCode = (req, res) => {
         .then(result => {
             res.status(200).json(
                 {
-                    message: 'auth complete',
-                    success: result
+                    result
                 });
         });
 }

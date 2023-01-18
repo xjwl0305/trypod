@@ -193,6 +193,7 @@ exports.CheckSendMail = async (mail, res) => {
             }
             resolve(true);
         })
+
         resolve(true);
     });
 }
@@ -202,7 +203,14 @@ exports.checkCode = (req) => {
         const hashAuth = req.cookies.hashAuth;
         try {
             if(code === hashAuth) {
-                resolve(true);
+                const account = sequelize.query('select account as count from user where email = :mail',
+                    {replacements: {mail: mail}, type: QueryTypes.SELECT});
+                const result = {
+                    message: 'auth complete',
+                    status: true,
+                    account: account[0].account
+                }
+                resolve(result);
             }
             else {
                 resolve(false);
