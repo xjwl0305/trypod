@@ -204,12 +204,13 @@ exports.checkCode = (req) => {
         const {mail} = req.query;
         try {
             if (code === hashAuth) {
-                const account = await sequelize.query('select account from user where email = :mail',
+                const account = await sequelize.query('select account, id from user where email = :mail',
                     {replacements: {mail: mail}, type: QueryTypes.SELECT});
                 const result = {
                     message: 'auth complete',
                     status: true,
-                    account: account[0].account
+                    account: account[0].account,
+                    uid: account[0].id
                 }
                 resolve(result);
             } else {
