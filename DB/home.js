@@ -20,7 +20,7 @@ exports.CheckStock = async (uid) => {
     result.forEach(function (item, index, array) {
         if(item.safe_weight > item.sum_weight){
                 var memberData = {};
-                memberData.device_number = item.device_number;
+                memberData.code = item.code;
                 memberData.name = item.name;
                 memberData.current_weight = item.sum_weight;
                 memberData.latest_date = item.created_at;
