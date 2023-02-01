@@ -231,11 +231,11 @@ exports.deviceUsage = async (uid, device_num, date_form, type) => {
         const final_date = [];
         let tp_Date;
         data.forEach((value) => {
-           const date = value.created_at.getDate();
+           const date = new Date(value.created_at).getDate();
            let sum_usage = 0;
            if(total_date.indexOf(date) === -1){
                total_date.push(date);
-               let res = data.filter(find => find.created_at.getDate() === date);
+               let res = data.filter(find => new Date(find.created_at).getDate() === date);
                res.forEach((weight) => {
                   sum_usage += parseInt(weight.usage_weight);
                });
@@ -287,11 +287,11 @@ exports.deviceUsage = async (uid, device_num, date_form, type) => {
         //     }
         // });
         data.forEach((value) => {
-            const date = value.created_at.getDate();
+            const date = new Date(value.created_at).getDate();
             let sum_usage = 0;
             if(total_date.indexOf(date) === -1){
                 total_date.push(date);
-                let res = data.filter(find => find.created_at.getDate() === date);
+                let res = data.filter(find => new Date(find.created_at).getDate() === date);
                 res.forEach((weight) => {
                     sum_usage += parseInt(weight.usage_weight);
                 });
@@ -299,7 +299,7 @@ exports.deviceUsage = async (uid, device_num, date_form, type) => {
                     tp_Date = {
                         "device_number": res[0].device_number,
                         "data": sum_usage,
-                        "created_at": res[0].created_at.getFullYear() + "-" + res[0].created_at.getMonth() + "-" + res[0].created_at.getDate()
+                        "created_at": new Date(res[0].created_at).getFullYear() + "-" + new Date(res[0].created_at).getMonth()+1 + "-" + new Date(res[0].created_at).getDate()
                     }
                 }
                 final_date.push(tp_Date);
