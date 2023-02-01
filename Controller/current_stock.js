@@ -184,7 +184,7 @@ exports.reportDownload = async (req, res) => {
         currentDate.getDate();
     if(Number(select) === 1) { // 아이템별 보고서 다운로드
         const standard = await sequelize.query('select summary.id as summary_id from (select max(summary.created_at) as standard_date from summary left join user u on u.id = summary.user_id where u.id = :uid and DATE(summary.created_at) = :date) as t2, summary left join user u on u.id = summary.user_id\n'+
-        'where u.id = :uid and DATE(summary.created_at) = :date and t2.standard_date = summary.created_at', {replacements: { uid: uid, date:date}, type: QueryTypes.SELECT});
+        'where u.id = :uid and DATE(summary.created_at) > (:date - INTERVAL 1 MONTH) and t2.standard_date = summary.created_at', {replacements: { uid: uid, date:date}, type: QueryTypes.SELECT});
         if (standard.length > 0) {
             const data = await sequelize.query("select item_name, item_category, item_code, sum(weight) as weight, sum(usage_weight) as usage_weight, branch_name, layer_name, warehouse_name, GROUP_CONCAT(device_number order by device_number SEPARATOR ',') as device_numbers\n" +
                 "from summary_content left join summary s on s.id = summary_content.summary_id where s.id = :id group by item_name", {
