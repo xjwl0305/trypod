@@ -243,7 +243,7 @@ exports.deviceUsage = async (uid, device_num, date_form, type) => {
                    tp_Date = {
                        "device_number": res[0].device_number,
                        "data": sum_usage,
-                       "created_at": new Date(res[0].created_at.getFullYear()) + "-" + new Date(res[0].created_at).getMonth()+1 + "-" + new Date(res[0].created_at).getDate()
+                       "created_at": new Date(res[0].created_at).getFullYear() + "-" + new Date(res[0].created_at).getMonth()+1 + "-" + new Date(res[0].created_at).getDate()
                    }
                }
                final_date.push(tp_Date);
