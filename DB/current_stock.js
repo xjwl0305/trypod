@@ -116,7 +116,7 @@ exports.itemGetDetail = async (code, branch_name, layer_name, warehouse_name) =>
         const current_usings = {"current_using": current_using_data}
 
         return Object.assign(connect_device, current_stock2, current_usings, device_status2);
-    }else if (branch_name !== 0 && layer_name === 0 && warehouse_name ===0){
+    }else if (branch_name !== '' && layer_name === '' && warehouse_name ===''){
         // 연동 디바이스
         const connect_devices = await sequelize.query('select distinct device_number, i.name, drd.weight, drd.battery, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id left join location l on l.id = earlivery_device.location_id\n'+
         'where i.code = :code and t2.max_date = drd.created_at and l.branch_name = :branch_name',
