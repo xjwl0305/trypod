@@ -83,6 +83,7 @@ exports.itemGetDetail = async (code) => {
     const connect_error_device = [];
     device_status.forEach(function (item, index, array) {
         let date = new Date(item.created_at);
+        let battery = item.battery;
         date.setHours(date.getHours()+ item.data_interval+5);
         if (date < today){
             let strange = {"device_number": item.device_number,
@@ -90,6 +91,13 @@ exports.itemGetDetail = async (code) => {
             "weight": item.weight,
                 "battery": item.battery,
             "created_at": item.created_at}
+            connect_error_device.push(strange);
+        }else if(battery <= 20){
+            let strange = {"device_number": item.device_number,
+                "name": item.name,
+                "weight": item.weight,
+                "battery": item.battery,
+                "created_at": item.created_at}
             connect_error_device.push(strange);
         }
     });
