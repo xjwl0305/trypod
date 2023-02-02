@@ -182,7 +182,8 @@ exports.deviceGetDetail = async (device_num) => {
         'where earlivery_device.device_number = :device_num and t2.max_date = drd.created_at and t2.earlivery_device_id = drd.earlivery_device_id',
         {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
     const connect_item2 = {"connect_item": connect_item}
-    const current_stock2 = {"current_stock": current_stock};
+    const current_stock2 = {"current_stock": current_stock[0].weight};
+    const current_battery = {"battery": current_stock[0].battery};
     // 디바이스 상태 이상
     const device_status = await sequelize.query('select device_number,  drd.data_interval, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
         'where earlivery_device.device_number = :device_num and t2.max_date = drd.created_at',
@@ -216,7 +217,7 @@ exports.deviceGetDetail = async (device_num) => {
     const current_usings = {"current_using": current_using_data}
     const statement_data = {"statement": statement}
 
-    return Object.assign(connect_item2, current_stock2, current_usings, device_status2, statement_data);
+    return Object.assign(connect_item2, current_stock2, current_battery, current_usings, device_status2, statement_data);
 }
 // 재고량 변화
 exports.deviceStockChange = async (device_num) => {
