@@ -55,7 +55,10 @@ exports.itemGetHouse = (req, res) => {
 
 exports.itemGetDetail = (req, res) => {
     const item_code = req.query.code;
-    curStockDB.itemGetDetail(item_code).then(result =>
+    const branch_name = req.query.branch_name;
+    const layer_name = req.query.layer_name;
+    const warehouse_name = req.query.warehouse_name;
+    curStockDB.itemGetDetail(item_code, branch_name, layer_name, warehouse_name).then(result =>
         res.status(200).json(
             {
                 result
@@ -65,7 +68,10 @@ exports.itemGetDetail = (req, res) => {
 
 exports.itemStockChange = (req, res) => {
     const item_code = req.query.code;
-    curStockDB.itemStockChange(item_code).then(result =>
+    const branch_name = req.query.branch_name;
+    const layer_name = req.query.layer_name;
+    const warehouse_name = req.query.warehouse_name;
+    curStockDB.itemStockChange(item_code, branch_name, layer_name, warehouse_name).then(result =>
         res.status(200).json(
             {
                 result
@@ -153,7 +159,10 @@ exports.itemUsage = (req, res) => {
 exports.itemDataInfo = (req, res) => {
     const uid = req.query.uid;
     const item_name = req.query.item_name;
-    curStockDB.itemDataInfo(uid, item_name).then(result =>
+    const branch_name = req.query.branch_name;
+    const layer_name = req.query.layer_name;
+    const warehouse_name = req.query.warehouse_name;
+    curStockDB.itemDataInfo(uid, item_name, branch_name, layer_name, warehouse_name).then(result =>
         res.status(200).json(
             {
                 result
