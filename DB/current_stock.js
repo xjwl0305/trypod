@@ -62,7 +62,7 @@ exports.itemGetHouse = async (uid, branch_name, layer_name, warehouse_name) => {
 
 exports.itemGetDetail = async (code) => {
     // 연동 디바이스
-    const connect_devices = await sequelize.query('select distinct device_number, i.name, drd.weight, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
+    const connect_devices = await sequelize.query('select distinct device_number, i.name, drd.weight, drd.battery, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
         'where i.code = :code and t2.max_date = drd.created_at',
         {replacements: { code: code}, type: QueryTypes.SELECT});
     // 최근 재고량
