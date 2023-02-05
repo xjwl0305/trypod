@@ -142,17 +142,16 @@ exports.sendMail = (mail, res) => {
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 return resolve(false);
+            }else {
+                return resolve(true);
             }
-            return resolve(true);
         })
-        return resolve(true);
     });
 }
 
 exports.CheckSendMail = async (mail, res) => {
     const result = await sequelize.query('select count(id) as count from user where email = :mail',
         {replacements: {mail: mail}, type: QueryTypes.SELECT});
-
 
     return new Promise(resolve => {
         if(result[0].count === 0) {

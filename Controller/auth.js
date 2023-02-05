@@ -166,19 +166,19 @@ exports.changePWAPI = (req, res) => {
 
 exports.SendMail = (req, res) => {
     const {mail} = req.query;
+    const onError = (error) => {
+        res.status(500).json({
+            message: error.message,
+            success: false
+        })
+    }
     authDB.sendMail(mail, res)
         .then(res.status(200).json(
             {
                 message: 'send in succe ssfully',
                 success: true,
             })
-        )
-        .catch(res.status(500).json(
-            {
-                message: 'Email not exist',
-                success: false
-            }
-        ))
+        ).catch(onError)
 }
 exports.CheckSendMail = (req, res) => {
     const {mail} = req.query;
