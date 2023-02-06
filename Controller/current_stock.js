@@ -145,17 +145,7 @@ exports.deviceStockChange = (req, res) => {
             })
     );
 }
-exports.itemUsage = (req, res) => {
-    const code = req.query.code;
-    const date_form = req.query.date_form;
-    const type = req.query.type;
-    curStockDB.itemUsage(code, date_form, type).then(result =>
-        res.status(200).json(
-            {
-                result
-            })
-    );
-}
+
 exports.itemDataInfo = (req, res) => {
     const uid = req.query.uid;
     const item_name = req.query.item_name;
@@ -170,12 +160,10 @@ exports.itemDataInfo = (req, res) => {
     );
 }
 
-exports.deviceUsage = (req, res) => {
+exports.itemUsage = (req, res) => {
     const uid = req.query.uid;
     const device_num = req.query.device_num;
-    const date_form = req.query.date_form;
-    const type = req.query.type;
-    curStockDB.deviceUsage(uid, device_num, date_form, type).then(result =>
+    curStockDB.itemUsage(uid, device_num).then(result =>
         res.status(200).json(
             {
                 result

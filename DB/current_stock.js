@@ -452,106 +452,19 @@ exports.deviceStockChange = async (device_num) => {
     return await sequelize.query('select device_number, weight, device_raw_data.created_at from device_raw_data left join earlivery_device ed on device_raw_data.earlivery_device_id = ed.id left join item i on ed.item_id = i.id where ed.device_number = :device_num',
         {replacements: { device_num: device_num }, type: QueryTypes.SELECT});
 }
-exports.deviceUsage = async (uid, device_num, date_form, type) => {
-    const b = 1;
-    if (parseInt(date_form) === 0){
-        const data = await sequelize.query('select device_number, item_name, usage_weight, s.created_at as created_at from summary_content left join summary s on s.id = summary_content.summary_id left join user u on s.user_id = u.id where u.id = :uid and device_number = :device_num and s.created_at BETWEEN DATE_ADD(NOW(),INTERVAL -1 WEEK ) AND NOW()',
-            {replacements: { uid: uid, device_num: device_num }, type: QueryTypes.SELECT});
-        const total_date = [];
-        const final_date = [];
-        let tp_Date;
-        data.forEach((value) => {
-           const date = new Date(value.created_at).getDate();
-           let sum_usage = 0;
-           if(total_date.indexOf(date) === -1){
-               total_date.push(date);
-               let res = data.filter(find => new Date(find.created_at).getDate() === date);
-               res.forEach((weight) => {
-                  sum_usage += parseInt(weight.usage_weight);
-               });
-               if(res.length > 0) {
-                   tp_Date = {
-                       "device_number": res[0].device_number,
-                       "data": sum_usage,
-                       "created_at": new Date(res[0].created_at).getFullYear() + "-" + new Date(res[0].created_at).getMonth()+1 + "-" + new Date(res[0].created_at).getDate()
-                   }
-               }
-               final_date.push(tp_Date);
-           }
-        });
-        if (parseInt(type) === 0){
-            return final_date;
-        }else {
-            const unit_weight = await sequelize.query('select distinct (unit_weight) from item left join earlivery_device ed on item.id = ed.item_id left join device_raw_data drd on ed.id = drd.earlivery_device_id\n' +
-                'where device_number = :device_num',
-                {replacements: { device_num: device_num }, type: QueryTypes.SELECT});
-            final_date.forEach((data) => {
-               data.data /= unit_weight[0].unit_weight;
-            });
-            return final_date;
-        }
-    }else{
-        const data = await sequelize.query('select device_number, item_name, usage_weight, s.created_at as created_at from summary_content left join summary s on s.id = summary_content.summary_id left join user u on s.user_id = u.id where u.id = :uid and device_number = :device_num and s.created_at BETWEEN DATE_ADD(NOW(),INTERVAL -1 MONTH ) AND NOW()',
-            {replacements: { uid: uid, device_num: device_num }, type: QueryTypes.SELECT});
-        const total_date = [];
-        const final_date = [];
-        let tp_Date;
-        // data.forEach((value) => {
-        //     const date = value.created_at;
-        //     const weekNum_date = weekNumOfMonth(date);
-        //     let sum_usage = 0;
-        //     if(total_date.indexOf(date) === -1){
-        //         total_date.push(date);
-        //         let res = data.filter(find => weekNumOfMonth(find.created_at)[0] === weekNum_date[0]);
-        //         res.forEach((weight) => {
-        //             sum_usage += parseInt(weight.usage_weight);
-        //         });
-        //         if(res.length > 0) {
-        //             tp_Date = {
-        //                 "device_number": res[0].device_number,
-        //                 "data": sum_usage,
-        //                 "created_at": res[0].created_at.getFullYear() + "-" + res[0].created_at.getMonth() + "-" + res[0].created_at.getDate()
-        //             }
-        //         }
-        //         final_date.push(tp_Date);
-        //     }
-        // });
-        data.forEach((value) => {
-            const date = new Date(value.created_at).getDate();
-            let sum_usage = 0;
-            if(total_date.indexOf(date) === -1){
-                total_date.push(date);
-                let res = data.filter(find => new Date(find.created_at).getDate() === date);
-                res.forEach((weight) => {
-                    sum_usage += parseInt(weight.usage_weight);
-                });
-                if(res.length > 0) {
-                    tp_Date = {
-                        "device_number": res[0].device_number,
-                        "data": sum_usage,
-                        "created_at": new Date(res[0].created_at).getFullYear() + "-" + new Date(res[0].created_at).getMonth()+1 + "-" + new Date(res[0].created_at).getDate()
-                    }
-                }
-                final_date.push(tp_Date);
-            }
-        });
-        const a = 1;
-        if (parseInt(type) === 0){
-            return final_date;
-        }else {
-            const unit_weight = await sequelize.query('select distinct (unit_weight) from item left join earlivery_device ed on item.id = ed.item_id left join device_raw_data drd on ed.id = drd.earlivery_device_id\n' +
-                'where device_number = :device_num',
-                {replacements: { device_num: device_num }, type: QueryTypes.SELECT});
-            final_date.forEach((data) => {
-                data.data /= unit_weight[0].unit_weight;
-            });
-            return final_date;
-        }
-    }
 
-    const data = await sequelize.query('select device_number, weight, device_raw_data.created_at from device_raw_data left join earlivery_device ed on ed.id = device_raw_data.earlivery_device_id left join location l on ed.location_id = l.id left join user u on l.user_id = u.id\n' +
-        'where u.id = :uid and device_number = :device_num and device_raw_data.created_at BETWEEN DATE_ADD(NOW(),INTERVAL -1 MONTH ) AND NOW()',
-        {replacements: { uid: uid, device_num: device_num }, type: QueryTypes.SELECT});
+exports.itemUsage = async (uid, device_num) => {
+    let data_list = [];
+    let total_data = {};
+    const tempToArray = device_num.split(',')
+    for (let i =0; i<tempToArray.length; i++){
+        const data = await sequelize.query('select distinct device_number, sum(usage_weight) as usage_weight, summary_content.created_at, date_format(summary_content.created_at, \'%Y-%m-%d\') as date from summary_content left join summary s on s.id = summary_content.summary_id left join user u on u.id = s.user_id\n' +
+            'where u.id = :uid and device_number = :device_num and summary_content.created_at BETWEEN DATE_ADD(NOW(),INTERVAL -1 MONTH ) AND NOW() group by date',
+            {replacements: { uid: uid, device_num: tempToArray[i] }, type: QueryTypes.SELECT});
+        data_list.push(data);
+    }
+    total_data.data = data_list;
+    return total_data;
 }
 
 var weekNumOfMonth = function(date){
