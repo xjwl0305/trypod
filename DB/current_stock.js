@@ -419,10 +419,21 @@ exports.deviceGetDetail = async (device_num) => {
     const current_using = await sequelize.query('select earlivery_device_id as device_number, weight, battery, created_at from device_raw_data where earlivery_device_id = :device_num limit 0,21',
         {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
 
+    // 사용 내역
+    const usage_data = await sequelize.query('select distinct device_number, sum(usage_weight) as usage_weight, summary_content.created_at, date_format(summary_content.created_at, \'%Y-%m-%d\') as date from summary_content left join summary s on s.id = summary_content.summary_id left join user u on u.id = s.user_id\n' +
+        'where device_number = :device_num and summary_content.created_at BETWEEN DATE_ADD(NOW(),INTERVAL -1 MONTH ) AND NOW() group by date',
+        {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
+
+    // unit weight
+    const unit_weight = await sequelize.query('select unit_weight from item left join earlivery_device ed on item.id = ed.item_id\n' +
+        'where ed.device_number = :device_num',
+        {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
+
     // 데이터 내역
     const statement = await sequelize.query('select earlivery_device_id as device_number, i.name, weight, battery, device_raw_data.created_at from device_raw_data left join earlivery_device ed on device_raw_data.earlivery_device_id = ed.id left join item i on ed.item_id = i.id\n' +
         '                                                                                         where earlivery_device_id = :device_num order by device_raw_data.created_at DESC limit 0,21',
         {replacements: { device_num: device_num}, type: QueryTypes.SELECT});
+
 
     let current_using_data = 0;
     try {
@@ -432,8 +443,9 @@ exports.deviceGetDetail = async (device_num) => {
     }
     const current_usings = {"current_using": current_using_data}
     const statement_data = {"statement": statement}
-
-    return Object.assign(connect_item2, current_stock2, current_battery, current_usings, device_status2, statement_data);
+    const usage_datas = {"usage_data": usage_data}
+    const unit_weights = {"unit_weight": unit_weight}
+    return Object.assign(connect_item2, current_stock2, current_battery, current_usings, device_status2, usage_datas, unit_weights, statement_data);
 }
 // 재고량 변화
 exports.deviceStockChange = async (device_num) => {
