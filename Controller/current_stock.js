@@ -192,7 +192,7 @@ exports.reportDownload = async (req, res) => {
         (currentDate.getMonth()+1)+"-"+
         currentDate.getDate();
     if(Number(select) === 1) { // 아이템별 보고서 다운로드
-        const standard = await sequelize.query('select summary.id as summary_id from (select max(summary.created_at) as standard_date from summary left join user u on u.id = summary.user_id where u.id = 1 and summary.created_at BETWEEN DATE_ADD(:date,INTERVAL -1 MONTH ) AND :date) as t2, summary left join user u on u.id = summary.user_id\n' +
+        const standard = await sequelize.query('select summary.id as summary_id, summary.created_at from (select max(summary.created_at) as standard_date from summary left join user u on u.id = summary.user_id where u.id = 1 and summary.created_at BETWEEN DATE_ADD(:date,INTERVAL -1 MONTH ) AND :date) as t2, summary left join user u on u.id = summary.user_id\n' +
         'where u.id = 1 and summary.created_at BETWEEN DATE_ADD(:date,INTERVAL -1 MONTH ) AND :date and t2.standard_date = summary.created_at', {replacements: { uid: uid, date:date}, type: QueryTypes.SELECT});
         if (standard.length > 0) {
             const data = await sequelize.query("select item_name as name, item_category as category, item_code as code, sum(weight) as weight, sum(usage_weight) as usage_weight, branch_name, layer_name, warehouse_name, GROUP_CONCAT(device_number order by device_number SEPARATOR ',') as device_numbers\n" +
@@ -260,10 +260,7 @@ exports.reportDownload = async (req, res) => {
             minute = minute >= 10 ? minute : '0' + minute;
             second = second >= 10 ? second : '0' + second;
             res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            res.setHeader("Content-Disposition", "attachment; filename=\"" +
-                URLEncoder.encode(company[0].company_name+" "+now2.getFullYear().toString() + "-" +
-                    month.toString() + "-" + day.toString() + "_" + hour.toString() + ":" + minute.toString() + ":" + second.toString() +"_아이템별 재고리스트" +".xlsx", "UTF-8")+"\";");
-
+            res.setHeader("Report_title", standard[0].created_at);
             await ItemReport.xlsx.write(res)
         }else{
             res.status(400).json(
@@ -277,9 +274,12 @@ exports.reportDownload = async (req, res) => {
         //     'left join earlivery_device e on drd.earlivery_device_id = e.id left join item i on i.id = e.item_id left join location l on e.location_id = l.id left join container c on c.id = e.container_id left join user u on l.user_id = u.id\n' +
         //     'where drd.earlivery_device_id = t2.earlivery_device_id and drd.created_at = t2.max_date and u.id = :uid',
         //     {replacements: { uid: uid}, type: QueryTypes.SELECT});
+        const standard = await sequelize.query('select summary.id as summary_id, summary.created_at from (select max(summary.created_at) as standard_date from summary left join user u on u.id = summary.user_id where u.id = 1 and summary.created_at BETWEEN DATE_ADD(:date,INTERVAL -1 MONTH ) AND :date) as t2, summary left join user u on u.id = summary.user_id\n' +
+            'where u.id = 1 and summary.created_at BETWEEN DATE_ADD(:date,INTERVAL -1 MONTH ) AND :date and t2.standard_date = summary.created_at', {replacements: { uid: uid, date:date}, type: QueryTypes.SELECT});
+
         const data = await sequelize.query('select device_number, item_name as name, item_category as category, item_code as code, weight, container_weight, real_weight, usage_weight, battery, branch_name, layer_name, warehouse_name, `interval` as data_interval, connection, summary_content.created_at from summary_content left join summary s on s.id = summary_content.summary_id left join user u on u.id = s.user_id\n' +
-            'where summary_content.created_at BETWEEN DATE_ADD(:date_data,INTERVAL -1 YEAR ) AND :date_data and u.id = :uid',
-            {replacements: { uid: uid, date_data : date}, type: QueryTypes.SELECT});
+            'where s.id = :id and u.id = :uid',
+            {replacements: { uid: uid, id: standard[0].summary_id}, type: QueryTypes.SELECT});
 
         const DeviceReport = new Excel.Workbook();
         const worksheet = DeviceReport.addWorksheet('DeviceReport Excel Sheet');
@@ -311,7 +311,9 @@ exports.reportDownload = async (req, res) => {
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         // res.setHeader("Content-Disposition", "attachment; filename=" +
         //     company[0].company_name+" "+now.getFullYear().toString() + "-" + month.toString() + "-" + day.toString() + " " + hour.toString() + ":" + minute.toString() + ":" + second.toString() +"아이템별 재고리스트" +".xlsx");
-        res.setHeader("Content-Disposition", "attachment; filename=test2.xlsx");
+        res.setHeader("Report_title", standard[0].created_at);
+        let title_Date = {"date":standard[0].created_at };
+        res.json(title_Date);
         await DeviceReport.xlsx.write(res)
         // DeviceReport.xlsx.writeBuffer().then((data) => {
         //     const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
