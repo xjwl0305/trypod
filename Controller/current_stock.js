@@ -277,7 +277,7 @@ exports.reportDownload = async (req, res) => {
         //     'left join earlivery_device e on drd.earlivery_device_id = e.id left join item i on i.id = e.item_id left join location l on e.location_id = l.id left join container c on c.id = e.container_id left join user u on l.user_id = u.id\n' +
         //     'where drd.earlivery_device_id = t2.earlivery_device_id and drd.created_at = t2.max_date and u.id = :uid',
         //     {replacements: { uid: uid}, type: QueryTypes.SELECT});
-        const data = await sequelize.query('select device_number, item_name, item_category, item_code, weight, container_weight, real_weight, usage_weight, battery, branch_name, layer_name, warehouse_name, `interval`, connection, summary_content.created_at from summary_content left join summary s on s.id = summary_content.summary_id left join user u on u.id = s.user_id\n' +
+        const data = await sequelize.query('select device_number, item_name as name, item_category as category, item_code as code, weight, container_weight, real_weight, usage_weight, battery, branch_name, layer_name, warehouse_name, `interval` as data_interval, connection, summary_content.created_at from summary_content left join summary s on s.id = summary_content.summary_id left join user u on u.id = s.user_id\n' +
             'where summary_content.created_at BETWEEN DATE_ADD(:date_data,INTERVAL -1 YEAR ) AND :date_data and u.id = :uid',
             {replacements: { uid: uid, date_data : date}, type: QueryTypes.SELECT});
 
@@ -291,13 +291,13 @@ exports.reportDownload = async (req, res) => {
             {header: '무게(kg)', key: 'weight', width: 20},
             {header: '컨테이너 무게(kg)', key: 'container_weight', width: 20},
             {header: '순재고무게(kg)', key: 'N/A weight', width: 20},
-            {header: '사용량(kg)', key: 'used', width: 20},
+            {header: '사용량(kg)', key: 'usage_weight', width: 20},
             {header: '배터리(%)', key: 'battery', width: 20},
             {header: '지점', key: 'branch_name', width: 20},
             {header: '구역', key: 'layer_name', width: 20},
             {header: '창고', key: 'warehouse_name', width: 20},
             {header: '데이터 전송 간격', key: 'data_interval', width: 20},
-            {header: '연결상태', key: 'N/A', width: 20},
+            {header: '연결상태', key: 'connection', width: 20},
             {header: '최근접속', key: 'created_at', width: 20}
         ]
         data.map((item, index)=> {
