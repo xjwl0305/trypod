@@ -463,7 +463,11 @@ exports.itemUsage = async (uid, device_num) => {
             {replacements: { uid: uid, device_num: tempToArray[i] }, type: QueryTypes.SELECT});
         data_list.push(data);
     }
+    const unit_weight = await sequelize.query('select unit_weight from item left join earlivery_device ed on item.id = ed.item_id\n' +
+        'where ed.device_number = :device_num',
+        {replacements: { device_num: tempToArray[0]}, type: QueryTypes.SELECT});
     total_data.data = data_list;
+    total_data.unit_weight = unit_weight;
     return total_data;
 }
 
