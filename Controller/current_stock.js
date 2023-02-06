@@ -195,10 +195,9 @@ exports.reportDownload = async (req, res) => {
         const standard = await sequelize.query('select summary.id as summary_id from (select max(summary.created_at) as standard_date from summary left join user u on u.id = summary.user_id where u.id = 1 and summary.created_at BETWEEN DATE_ADD(:date,INTERVAL -1 MONTH ) AND :date) as t2, summary left join user u on u.id = summary.user_id\n' +
         'where u.id = 1 and summary.created_at BETWEEN DATE_ADD(:date,INTERVAL -1 MONTH ) AND :date and t2.standard_date = summary.created_at', {replacements: { uid: uid, date:date}, type: QueryTypes.SELECT});
         if (standard.length > 0) {
-            const data = await sequelize.query("select name, category, code, sum(weight) as weight, sum(usage_weight) as usage_weight, branch_name, layer_name, warehouse_name, GROUP_CONCAT(device_number order by device_number SEPARATOR ',') as device_numbers\n" +
-                "from summary_content left join summary s on s.id = summary_content.summary_id where s.id = :id group by item_name", {
-                replacements: {id: standard[0].summary_id},
-                type: QueryTypes.SELECT
+            const data = await sequelize.query("select item_name as name, item_category as category, item_code as code, sum(weight) as weight, sum(usage_weight) as usage_weight, branch_name, layer_name, warehouse_name, GROUP_CONCAT(device_number order by device_number SEPARATOR ',') as device_numbers\n" +
+                "from summary_content left join summary s on s.id = summary_content.summary_id where s.id = :id group by name", {
+                replacements: {id: standard[0].summary_id}, type: QueryTypes.SELECT
             });
 
             const connection = await sequelize.query("select GROUP_CONCAT(device_number) as device_number, item_name from summary_content where summary_id = :id and connection = 'warning' group by item_name", {
