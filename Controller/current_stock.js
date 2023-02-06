@@ -312,8 +312,6 @@ exports.reportDownload = async (req, res) => {
         // res.setHeader("Content-Disposition", "attachment; filename=" +
         //     company[0].company_name+" "+now.getFullYear().toString() + "-" + month.toString() + "-" + day.toString() + " " + hour.toString() + ":" + minute.toString() + ":" + second.toString() +"아이템별 재고리스트" +".xlsx");
         res.setHeader("Report_title", standard[0].created_at);
-        let title_Date = {"date":standard[0].created_at };
-        res.json(title_Date);
         await DeviceReport.xlsx.write(res)
         // DeviceReport.xlsx.writeBuffer().then((data) => {
         //     const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
