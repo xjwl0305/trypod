@@ -467,7 +467,7 @@ exports.itemUsage = async (uid, device_num) => {
         'where ed.device_number = :device_num',
         {replacements: { device_num: tempToArray[0]}, type: QueryTypes.SELECT});
     total_data.data = data_list;
-    total_data.unit_weight = unit_weight;
+    total_data.unit_weight = unit_weight ;
     return total_data;
 }
 
