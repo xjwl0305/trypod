@@ -177,7 +177,7 @@ exports.CheckSendMail = async (mail, res) => {
             secure: false,
             auth: {
                 user: "tripodlabofficial@gmail.com",
-                pass: "czievzxlwxhtbgly",
+                pass: "dyjcompwdpbxsmai",
             },
         });
         let mailOptions = transporter.sendMail({
@@ -188,13 +188,11 @@ exports.CheckSendMail = async (mail, res) => {
         });
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
-                resolve(false);
-                return false;
+                return resolve(false);
+            }else {
+                return resolve(true);
             }
-            resolve(true);
         })
-
-        resolve(true);
     });
 }
 
