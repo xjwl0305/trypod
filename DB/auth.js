@@ -165,8 +165,7 @@ exports.CheckSendMail = async (mail, res) => {
         });
         ejs.renderFile('./public/template/authMail.ejs', {authCode: authNum}, function (err, data) {
             if (err) {
-                resolve(false);
-                return false;
+                return resolve(false);
             }
             emailTemplete = data;
         });
@@ -188,6 +187,7 @@ exports.CheckSendMail = async (mail, res) => {
         });
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
+                console.log(error);
                 return resolve(false);
             }else {
                 return resolve(true);

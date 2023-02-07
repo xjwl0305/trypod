@@ -175,7 +175,7 @@ exports.SendMail = (req, res) => {
     authDB.sendMail(mail, res)
         .then(res.status(200).json(
             {
-                message: 'send in succe ssfully',
+                message: 'send in successfully',
                 success: true,
             })
         ).catch(onError)
@@ -190,20 +190,11 @@ exports.CheckSendMail = (req, res) => {
     }
     authDB.CheckSendMail(mail, res)
         .then(result => {
-            if(result) {
                 res.status(200).json(
                     {
-                        message: 'send_success',
-                        success: result
+                        message: 'send in successfully',
+                        success: true
                     });
-            }else{
-                res.status(403).json(
-                    {
-                        "message": 'invalid_mail',
-                        "success": result
-                    }
-                )
-            }
             })
         .catch(onError)
 }
