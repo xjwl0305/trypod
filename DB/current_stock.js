@@ -502,7 +502,7 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
         uri: 'http://localhost:8000/sched_change',
         method: 'GET',
         body:{
-            start_time: '1999-01-01_06:06:06',
+            start_time: '2023-02-07_14:06:06',
             writing_cycle:report_writing_cycle,
             account: account,
             uid: uid

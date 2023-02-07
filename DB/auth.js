@@ -130,7 +130,7 @@ exports.sendMail = (mail, res) => {
             secure: false,
             auth: {
                 user: "tripodlabofficial@gmail.com",
-                pass: "czievzxlwxhtbgly",
+                pass: "dyjcompwdpbxsmai",
             },
         });
         let mailOptions = transporter.sendMail({
