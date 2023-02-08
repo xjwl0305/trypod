@@ -13,7 +13,7 @@ const request = require("request-promise-native");
 
 const app = express();
 const corsOptions = {
-    origin:  "http://localhost:3302",
+    origin:  '*',
     exposedHeaders: 'Report_title',
     credentials: true
 }
