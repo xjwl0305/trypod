@@ -222,7 +222,7 @@ exports.checkCode = (req) => {
 exports.checkIDCode = (req) => {
     return new Promise(async resolve => {
         const {code} = req.query;
-        const hashAuth = req.cookies.hashAuth;
+        const hashAuth = req.cookies.hashAuth2;
         const {mail} = req.query;
         try {
             if (code === hashAuth) {
