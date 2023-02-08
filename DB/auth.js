@@ -160,7 +160,7 @@ exports.CheckSendMail = async (mail, res) => {
         }
         let authNum = Math.random().toString().substr(2, 6);
         let emailTemplete;
-        res.cookie('hashAuth', authNum, {
+        res.cookie('hashAuth2', authNum, {
             maxAge: 300000
         });
         ejs.renderFile('./public/template/authMail.ejs', {authCode: authNum}, function (err, data) {
