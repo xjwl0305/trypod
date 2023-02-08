@@ -13,9 +13,7 @@ const request = require("request-promise-native");
 
 const app = express();
 const corsOptions = {
-    origin:  '*',
     exposedHeaders: 'Report_title',
-    credentials: true
 }
 
 app.use(cors(corsOptions));
