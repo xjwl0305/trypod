@@ -14,7 +14,7 @@ const request = require("request-promise-native");
 const app = express();
 const corsOptions = {
     origin:  "http://localhost:3302",
-    exposedHeaders: ['Report_title', 'set-cookie'],
+    exposedHeaders: 'Report_title',
     credentials: true
 }
 
