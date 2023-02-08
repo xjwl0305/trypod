@@ -95,13 +95,13 @@ exports.checkPassword = (data) => {
             .catch(err => resolve(err));
     });
 }
-exports.changePassword = (password, uid) => {
+exports.changePassword = (password, mail) => {
     return new Promise(resolve => {
         models.user.update({
             hashed_password: password
         },{
             where: {
-                id: uid
+                email: mail
             },
             returning: true
         })
@@ -201,9 +201,6 @@ exports.checkCode = (req) => {
         const {code} = req.query;
         const hashAuth = req.cookies.hashAuth;
         const {mail} = req.query;
-        console.log(code);
-        console.log(mail);
-        console.log(hashAuth);
         try {
             if (code === hashAuth) {
                 const result = {
@@ -227,9 +224,6 @@ exports.checkIDCode = (req) => {
         const {code} = req.query;
         const hashAuth = req.cookies.hashAuth;
         const {mail} = req.query;
-        console.log(code);
-        console.log(mail);
-        console.log(hashAuth);
         try {
             if (code === hashAuth) {
                 const account = await sequelize.query('select account, id from user where email = :mail',
