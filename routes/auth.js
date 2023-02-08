@@ -12,6 +12,7 @@ router.post('/login', userController.loginAPI);
 router.post('/password', userController.changePWAPI);
 router.get('/sendMail', userController.SendMail);
 router.get('/checkEmail', userController.checkMailCode);
+router.get('/checkIDcode', userController.checkIDCode);
 router.get('/ChecksendEmail', userController.CheckSendMail);
 router.get('/reportSetting', userController.ReportSetting);
 

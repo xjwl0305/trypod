@@ -222,6 +222,36 @@ exports.checkCode = (req) => {
     });
 }
 
+exports.checkIDCode = (req) => {
+    return new Promise(async resolve => {
+        const {code} = req.query;
+        const hashAuth = req.cookies.hashAuth;
+        const {mail} = req.query;
+        console.log(code);
+        console.log(mail);
+        console.log(hashAuth);
+        try {
+            if (code === hashAuth) {
+                const account = await sequelize.query('select account, id from user where email = :mail',
+                    {replacements: {mail: mail}, type: QueryTypes.SELECT});
+                const result = {
+                    message: 'auth complete',
+                    status: true,
+                    account: account[0].account,
+                    uid: account[0].id
+                }
+                console.log(result);
+                resolve(result);
+            } else {
+                resolve(false);
+            }
+        } catch (err) {
+            resolve(false);
+            console.error(err);
+        }
+    });
+}
+
 exports.ReportSetting = async (uid, account) => {
 
     let today = new Date();

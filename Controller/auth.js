@@ -209,6 +209,15 @@ exports.checkMailCode = (req, res) => {
                 });
         });
 }
+exports.checkIDCode = (req, res) => {
+    authDB.checkIDCode(req)
+        .then(result => {
+            res.status(200).json(
+                {
+                    result
+                });
+        });
+}
 
 exports.ReportSetting = (req, res) => {
     const uid = req.query.uid;
