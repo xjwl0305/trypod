@@ -13,7 +13,7 @@ const request = require("request-promise-native");
 
 const app = express();
 const corsOptions = {
-    origin: true,
+    origin: "http://3.34.196.3:3302",
     exposedHeaders: 'Report_title',
     credentials: true
 }
