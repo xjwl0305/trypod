@@ -211,6 +211,7 @@ exports.checkMailCode = (req, res) => {
 }
 exports.checkIDCode = (req, res) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Origin", "true");
     authDB.checkIDCode(req)
         .then(result => {
             res.status(200).json(
