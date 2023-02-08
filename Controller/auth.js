@@ -183,7 +183,7 @@ exports.SendMail = (req, res) => {
 exports.CheckSendMail = (req, res) => {
     const {mail} = req.query;
     res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Origin", ["http://3.34.196.3:3302", "http://183.96.82.136:3302"]);
+    res.setHeader("Access-Control-Allow-Origin", "http://183.96.82.136:3302");
     const onError = (error) => {
         res.status(500).json({
             message: error.message,
