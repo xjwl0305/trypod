@@ -496,6 +496,8 @@ var weekNumOfMonth = function(date){
 
 
 exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle ) => {
+    console.log("base_time");
+    console.log(base_time);
     const data =  await sequelize.query('update summary_option left join user u on summary_option.id = u.summary_option_id set base_time = :base_time, report_writing_cycle = :report_writing_cycle where u.id = :uid',
         {replacements: { uid: uid , base_time: base_time, report_writing_cycle: report_writing_cycle}, type: QueryTypes.UPDATE});
     let options = {
