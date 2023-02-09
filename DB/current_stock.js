@@ -504,25 +504,44 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
         {replacements: { uid: uid , base_time: base_time, report_writing_cycle: report_writing_cycle}, type: QueryTypes.UPDATE});
 
     const result = {};
-    axios({
-        method: 'post',
-        url: `http://localhost:8000/sched_change`,
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-        },
-        data: {
-            start_time: base_time,
-            writing_cycle:report_writing_cycle,
-            account: account,
-            uid: uid
-        }
-    })
-        .then((response) => {
+    axios.post(`http://3.34.196.3:8000/sched_change`, {
+        start_time: base_time,
+        writing_cycle:report_writing_cycle,
+        account: account,
+        uid: uid
+    }).then(function (res) {
+        console.log(res);
+        if (res.status === 200) {
             result.status = "success";
             return result;
-        })
-        .catch((err) => {
-            result.status = err;
+        }
+    })
+        .catch(function (error) {
+            result.status = error;
             return result;
         });
+
+
+
+//     axios({
+//         method: 'post',
+//         url: `http://localhost:8000/sched_change`,
+//         headers: {
+//             'Content-Type': 'application/json; charset=utf-8',
+//         },
+//         data: {
+//             start_time: base_time,
+//             writing_cycle:report_writing_cycle,
+//             account: account,
+//             uid: uid
+//         }
+//     })
+//         .then((response) => {
+//             result.status = "success";
+//             return result;
+//         })
+//         .catch((err) => {
+//             result.status = err;
+//             return result;
+//         });
 }
