@@ -500,9 +500,9 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
         {replacements: { uid: uid , base_time: base_time, report_writing_cycle: report_writing_cycle}, type: QueryTypes.UPDATE});
     let options = {
         uri: 'http://localhost:8000/sched_change',
-        method: 'GET',
+        method: 'POST',
         body:{
-            start_time: '2023-02-07_14:06:06',
+            start_time: base_time,
             writing_cycle:report_writing_cycle,
             account: account,
             uid: uid

@@ -249,28 +249,35 @@ exports.checkIDCode = (req) => {
 exports.ReportSetting = async (uid, account) => {
 
     let today = new Date();
+    let date = today.getFullYear()+'-'+(today.getMonth()+1) + '-' + (today.getDate())
     if(today.getHours() < 5 && today.getHours() >= 0){
-        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:05:00:00")',
-            {replacements: { uid: uid }, type: QueryTypes.INSERT});
+        date +=" 05:00:00"
+        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, :date)',
+            {replacements: { uid: uid , date:date}, type: QueryTypes.INSERT});
         const get_id = await sequelize.query('select last_insert_id() as last');
         const a = await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
             {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
+
     }else if(today.getHours() < 13 && today.getHours() >= 5){
-        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:13:00:00")',
-            {replacements: { uid: uid }, type: QueryTypes.INSERT});
+        date +=" 13:00:00"
+        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, :date)',
+            {replacements: { uid: uid ,date:date}, type: QueryTypes.INSERT});
         const get_id = await sequelize.query('select last_insert_id() as last');
         const a = await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
             {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
+
     }else{
-        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, "1999-01-01:21:00:00")',
-            {replacements: { uid: uid }, type: QueryTypes.INSERT});
+        date +=" 21:00:00"
+        const initial = await sequelize.query('insert into summary_option (report_writing_cycle, base_time) values (8, :date)',
+            {replacements: { uid: uid , date:date}, type: QueryTypes.INSERT});
         const get_id = await sequelize.query('select last_insert_id() as last');
         const a = await sequelize.query('update user set summary_option_id = :get_id where id = :uid',
             {replacements: { uid: uid , get_id: get_id[0][0]['last']}, type: QueryTypes.UPDATE});
+
     }
 
     axios.post(`http://localhost:8000/sched`, {
-        start_time: '2023-01-18_18:00:00',
+        start_time: date,
         writing_cycle:8,
         account: account,
         uid: uid
