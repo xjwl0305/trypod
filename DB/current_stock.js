@@ -510,11 +510,11 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
         },
         json:true
     };
+    var result = {};
     await request.post(options, function (error, response, body) {
         console.log(error);
-        console.log(response);
-        return {"status": response,
-                "error": error};
+        result.status = error;
         //callback
     });
+    return result;
 }
