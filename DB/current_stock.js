@@ -507,7 +507,7 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
         const result = {};
         axios({
             method: 'post',
-            url: `http://3.34.196.3:8000/sched_change`,
+            url: `http://localhost:8000/sched_change`,
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
             },
