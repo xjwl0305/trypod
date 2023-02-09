@@ -523,7 +523,7 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
                 resolve(result);
             })
             .catch((err) => {
-                result.status = error;
+                result.status = err;
                 resolve(result);
             });
     });
