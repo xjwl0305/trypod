@@ -19,7 +19,7 @@ router.get('/deviceGetHouse', curStockController.deviceGetHouse);
 router.get('/deviceGetDetail', curStockController.deviceGetDetail);
 router.post('/deviceStockChange', curStockController.deviceStockChange);
 router.post('/reportDownload', curStockController.reportDownload);
-router.get('/reportTimeSetting', curStockController.ReportTimeSetting);
+router.post('/reportTimeSetting', curStockController.ReportTimeSetting);
 router.post('/itemUsage', curStockController.itemUsage);
 
 module.exports = router;
