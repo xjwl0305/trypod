@@ -509,7 +509,7 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
         },
         json:true
     };
-    request.get(options, function (error, response, body) {
+    request.post(options, function (error, response, body) {
         const a = 1
         return body
         //callback
