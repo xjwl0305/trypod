@@ -504,7 +504,7 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
 
     return new Promise(resolve => {
         let options = {
-            uri: 'http://localhost:8000/sched_change',
+            uri: 'http://3.34.196.3:8000/sched_change',
             method: 'POST',
             body:{
                 start_time: base_time,

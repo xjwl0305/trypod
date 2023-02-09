@@ -276,7 +276,7 @@ exports.ReportSetting = async (uid, account) => {
 
     }
 
-    axios.post(`http://localhost:8000/sched`, {
+    axios.post(`http://3.34.196.3:8000/sched`, {
         start_time: date,
         writing_cycle:8,
         account: account,
