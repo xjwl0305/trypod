@@ -503,28 +503,26 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
     const data =  await sequelize.query('update summary_option left join user u on summary_option.id = u.summary_option_id set base_time = :base_time, report_writing_cycle = :report_writing_cycle where u.id = :uid',
         {replacements: { uid: uid , base_time: base_time, report_writing_cycle: report_writing_cycle}, type: QueryTypes.UPDATE});
 
-    return new Promise(resolve => {
-        const result = {};
-        axios({
-            method: 'post',
-            url: `http://localhost:8000/sched_change`,
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-            },
-            data: {
-                start_time: base_time,
-                writing_cycle:report_writing_cycle,
-                account: account,
-                uid: uid
-            }
+    const result = {};
+    axios({
+        method: 'post',
+        url: `http://localhost:8000/sched_change`,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+        },
+        data: {
+            start_time: base_time,
+            writing_cycle:report_writing_cycle,
+            account: account,
+            uid: uid
+        }
+    })
+        .then((response) => {
+            result.status = "success";
+            return result;
         })
-            .then((response) => {
-                result.status = "success";
-                resolve(result);
-            })
-            .catch((err) => {
-                result.status = err;
-                resolve(result);
-            });
-    });
+        .catch((err) => {
+            result.status = err;
+            return result;
+        });
 }
