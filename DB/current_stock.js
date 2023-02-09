@@ -9,6 +9,7 @@ const cors = require("cors");
 const app = require("../app");
 const ejs = require("ejs");
 const nodemailer = require("nodemailer");
+const axios = require("axios");
 // 아이템 재고 현황
 exports.itemGetAll = async (uid) => {
     const data = await sequelize.query('select distinct i.code, i.name, i.safe_weight, i.unit_weight, earlivery_device.device_number ,drd.data_interval, drd.weight, drd.created_at from (select earlivery_device_id, max(created_at) as max_date from device_raw_data group by earlivery_device_id) as t2, earlivery_device left join item i on earlivery_device.item_id = i.id left join device_raw_data drd on earlivery_device.id = drd.earlivery_device_id\n' +
@@ -503,27 +504,27 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
         {replacements: { uid: uid , base_time: base_time, report_writing_cycle: report_writing_cycle}, type: QueryTypes.UPDATE});
 
     return new Promise(resolve => {
-        let options = {
-            uri: 'http://3.34.196.3:8000/sched_change',
-            method: 'POST',
-            body:{
+        const result = {};
+        axios({
+            method: 'post',
+            url: `http://3.34.196.3:8000/sched_change`,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+            },
+            data: {
                 start_time: base_time,
                 writing_cycle:report_writing_cycle,
                 account: account,
                 uid: uid
-            },
-            json:true
-        };
-        const result = {};
-        request.post(options, function (error, response, body) {
-            if(error) {
-                result.status = error;
-                resolve(result);
-            }else {
+            }
+        })
+            .then((response) => {
                 result.status = "success";
                 resolve(result);
-            }
-            //callback
-        });
+            })
+            .catch((err) => {
+                result.status = error;
+                resolve(result);
+            });
     });
 }
