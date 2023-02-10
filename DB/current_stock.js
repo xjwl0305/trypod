@@ -518,16 +518,15 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
         if (res.status === 200) {
             result.status = "success";
             console.log(result);
-            return result;
+
         }
     })
         .catch(function (error) {
             result.status = error;
             console.log(result);
-            return result;
         });
 
-
+    return result;
 
 //     axios({
 //         method: 'post',
