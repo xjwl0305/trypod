@@ -514,14 +514,16 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
         headers: {'Content-Type' : 'application/json'}
     }
     ).then(function (res) {
-        console.log(res);
+
         if (res.status === 200) {
             result.status = "success";
+            console.log(result);
             return result;
         }
     })
         .catch(function (error) {
             result.status = error;
+            console.log(result);
             return result;
         });
 
