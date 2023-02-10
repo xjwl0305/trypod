@@ -505,9 +505,15 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
 
     const result = {};
 
-    await axios.post(`http://3.34.196.3:8000/sched_change?start_time=`+base_time+'&writing_cycle='+report_writing_cycle+'&account='+account+'&uid='+uid, {
-        headers: {'Content-Type': 'application/json'}
-    }).then(function (res) {
+    await axios.post(`http://3.34.196.3:8000/sched_change`, {
+        start_time: base_time,
+        writing_cycle:report_writing_cycle,
+        account: account,
+        uid: uid
+    },{
+        headers: {'Content-Type' : 'application/json'}
+    }
+    ).then(function (res) {
         console.log(res);
         if (res.status === 200) {
             result.status = "success";
