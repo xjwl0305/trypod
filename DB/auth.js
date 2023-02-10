@@ -276,7 +276,10 @@ exports.ReportSetting = async (uid, account) => {
 
     }
 
-    axios.post(`http://3.34.196.3:8000/sched`, {
+    let result = 0;
+
+
+    axios.post( 'http://3.34.196.3:8000/sched?uid='+uid+'&start_time='+date+'&writing_cycle='+8+'&account='+account, {
         start_time: date,
         writing_cycle:8,
         account: account,
@@ -284,12 +287,12 @@ exports.ReportSetting = async (uid, account) => {
     }).then(function (res) {
             console.log(res);
             if (res.status === 200) {
-                return true;
+                result = 1;
             }
         })
         .catch(function (error) {
             console.log(error);
-            return false;
+            result = 0;
         });
-
+    return result === 1;
 }
