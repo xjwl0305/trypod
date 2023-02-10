@@ -505,7 +505,7 @@ exports.ReportTimeSetting = async (uid, account, base_time, report_writing_cycle
 
     const result = {};
 
-    await axios.post(`http://3.34.196.3:8000/sched_change`, {
+    await axios.post('http://3.34.196.3:8000/sched_change?uid='+uid+'&start_time='+base_time+'&writing_cycle='+report_writing_cycle+'&account='+account, {
         start_time: base_time,
         writing_cycle:report_writing_cycle,
         account: account,
