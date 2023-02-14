@@ -51,20 +51,22 @@ exports.enrollAPI = (req, res) => {
         .digest('base64')
     authDB.enroll({account, phone, hashed_password, email, company_name, company_address, company_detailed_address, division})
         .then(result => {
-            if (result[1] === 1) {
-                res.status(200).json(
-                    {
-                        "success": true,
-                        "uid": result[0]
-                    }
-                )
-            } else {
-                res.status(403).json(
-                    {
-                        "success": false
-                    }
-                )
-            }
+            authDB.ReportSetting(result[0], account).then(result2 => {
+                if (result[1] === 1) {
+                    res.status(200).json(
+                        {
+                            "success": true,
+                            "uid": result[0]
+                        }
+                    )
+                } else {
+                    res.status(403).json(
+                        {
+                            "success": false
+                        }
+                    )
+                }
+            });
         });
 }
 
