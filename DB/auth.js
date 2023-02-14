@@ -278,7 +278,7 @@ exports.ReportSetting = async (uid, account) => {
 
     let result = 0;
 
-
+    console.log('report_date: '+date);
     axios.post( 'http://3.34.196.3:8000/sched?uid='+uid+'&start_time='+date+'&writing_cycle='+8+'&account='+account, {
         start_time: date,
         writing_cycle:8,
